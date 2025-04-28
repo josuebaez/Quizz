@@ -120,7 +120,9 @@ class HomeScreenState extends State<HomeScreen> {
                   onPressed: cerrarSesion,
                   tooltip: 'Cerrar Sesión',
                 ),
-                title: const Text('Quiz App'),
+                // Se ha eliminado el título 'Quiz App'
+                title: null, // Quitamos el título
+                centerTitle: false, // Para asegurar que no quede espacio en el centro
                 actions: [
                   Padding(
                     padding: const EdgeInsets.all(18.0),
