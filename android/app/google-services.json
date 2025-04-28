@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "875370280518",
+    "project_id": "logquiz-c1c1e",
+    "storage_bucket": "logquiz-c1c1e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:875370280518:android:ff25a0bdbe992562957c47",
+        "android_client_info": {
+          "package_name": "com.example.prueba_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDo_ZOVUozZ9RKkKJTO-S-2o7noE7Xy--4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
