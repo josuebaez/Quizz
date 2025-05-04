@@ -8,32 +8,53 @@ import '../widgets/option_card.dart';
 import '../widgets/result_box.dart';
 import '../models/api_service.dart'; // Importar el servicio de API
 
+//Se modifico este archivo solo para agregar un LogOut
+
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final String difficulty;
+
+  const HomeScreen({super.key, required this.difficulty});
 
   @override
   HomeScreenState createState() => HomeScreenState();
 }
 
 class HomeScreenState extends State<HomeScreen> {
-  var apiService = ApiService(); // Instancia del servicio de API
-
+  final ApiService apiService = ApiService();
   late Future<List<Question>> _questions;
-
-  Future<List<Question>> getData() async {
-    return apiService.fetchQuestions(); // Llamar al servicio de API
-  }
-
-  @override
-  void initState() {
-    _questions = getData();
-    super.initState();
-  }
 
   int index = 0;
   bool isPressed = false;
   int score = 0;
   bool isAlreadySelected = false;
+  bool isLoading = true;
+  String errorMessage = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadQuestions();
+  }
+
+  void _loadQuestions() {
+    setState(() {
+      isLoading = true;
+      errorMessage = '';
+    });
+
+    _questions = apiService.fetchQuestionsByDifficulty(widget.difficulty);
+    
+    _questions.then((_) {
+      setState(() {
+        isLoading = false;
+      });
+    }).catchError((error) {
+      setState(() {
+        isLoading = false;
+        errorMessage = 'Error al cargar preguntas: ${error.toString()}';
+      });
+    });
+  }
 
   void nextQuestion(int questionLength) {
     if (index == questionLength - 1) {
@@ -56,7 +77,7 @@ class HomeScreenState extends State<HomeScreen> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Por favor seleccione una opcion'),
+            content: Text('Por favor seleccione una opción'),
             behavior: SnackBarBehavior.floating,
             margin: EdgeInsets.symmetric(vertical: 20.0),
           ),
@@ -86,14 +107,12 @@ class HomeScreenState extends State<HomeScreen> {
       isPressed = false;
       isAlreadySelected = false;
     });
+    _loadQuestions();
     Navigator.pop(context);
   }
 
   void cerrarSesion() {
-    // Simplemente cerrar la sesión - el StreamBuilder en Main_Page
-    // detectará este cambio y mostrará Auth_Page automáticamente
     FirebaseAuth.instance.signOut().catchError((error) {
-      // Manejar errores si ocurren al cerrar sesión
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error al cerrar sesión: ${error.toString()}')),
       );
@@ -102,98 +121,124 @@ class HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: _questions,
-      builder: (ctx, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (snapshot.hasData) {
-            var extractedData = snapshot.data as List<Question>;
-            return Scaffold(
-              backgroundColor: background,
-              appBar: AppBar(
-                backgroundColor: background,
-                shadowColor: Colors.transparent,
-                leading: IconButton(
-                  icon: const Icon(Icons.logout),
-                  onPressed: cerrarSesion,
-                  tooltip: 'Cerrar Sesión',
-                ),
-                // Se ha eliminado el título 'Quiz App'
-                title: null, // Quitamos el título
-                centerTitle: false, // Para asegurar que no quede espacio en el centro
-                actions: [
-                  Padding(
-                    padding: const EdgeInsets.all(18.0),
-                    child: Text(
-                      'Score: $score',
-                      style: const TextStyle(fontSize: 18.0),
-                    ),
-                  ),
+    return Scaffold(
+      backgroundColor: background,
+      appBar: AppBar(
+        backgroundColor: background,
+        shadowColor: Colors.transparent,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context),
+          tooltip: 'Volver',
+        ),
+        title: Text('Nivel ${widget.difficulty}'),
+        actions: [
+          /*IconButton(
+            icon: Icon(Icons.logout),
+            onPressed: cerrarSesion,
+            tooltip: 'Cerrar Sesión',
+          ),*/
+          Padding(
+            padding: const EdgeInsets.all(18.0),
+            child: Text(
+              'Score: $score',
+              style: const TextStyle(fontSize: 18.0),
+            ),
+          ),
+        ],
+      ),
+      body: isLoading
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(height: 20),
+                  Text('Cargando preguntas...',
+                      style: TextStyle(fontSize: 16)),
                 ],
               ),
-              body: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: Column(
-                  children: [
-                    QuestionWidget(
-                      indexAction: index,
-                      question: extractedData[index].title,
-                      totalQuestions: extractedData.length,
-                    ),
-                    const Divider(color: neutral),
-                    const SizedBox(height: 25.0),
-                    for (int i = 0; i < extractedData[index].options.length; i++)
-                      GestureDetector(
-                        onTap: () => checkAnswerAndUpdate(
-                          extractedData[index].options.values.toList()[i],
-                        ),
-                        child: OptionCard(
-                          option: extractedData[index].options.keys.toList()[i],
-                          color: isPressed
-                              ? extractedData[index].options.values.toList()[i] == true
-                                  ? correct
-                                  : incorrect
-                              : neutral,
-                        ),
+            )
+          : errorMessage.isNotEmpty
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.error_outline, size: 60, color: incorrect),
+                      SizedBox(height: 20),
+                      Text(errorMessage,
+                          style: TextStyle(fontSize: 16),
+                          textAlign: TextAlign.center),
+                      SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: _loadQuestions,
+                        child: Text('Reintentar'),
                       ),
-                  ],
-                ),
-              ),
-              floatingActionButton: GestureDetector(
-                onTap: () => nextQuestion(extractedData.length),
-                child: const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10.0),
-                  child: NextButton(),
-                ),
-              ),
-              floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-            );
-          }
-        } else {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const CircularProgressIndicator(),
-                const SizedBox(height: 20.0),
-                Text(
-                  'Espere mientras cargan las preguntas...',
-                  style: TextStyle(
-                    color: Theme.of(context).primaryColor,
-                    decoration: TextDecoration.none,
-                    fontSize: 14.0,
+                    ],
                   ),
+                )
+              : FutureBuilder<List<Question>>(
+                  future: _questions,
+                  builder: (ctx, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      if (snapshot.hasError) {
+                        return Center(
+                          child: Text('${snapshot.error}'),
+                        );
+                      } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                        var extractedData = snapshot.data!;
+                        return Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                          child: Column(
+                            children: [
+                              QuestionWidget(
+                                indexAction: index,
+                                question: extractedData[index].title,
+                                totalQuestions: extractedData.length,
+                              ),
+                              const Divider(color: neutral),
+                              const SizedBox(height: 25.0),
+                              ...extractedData[index].options.entries.map((entry) => 
+                                GestureDetector(
+                                  onTap: () => checkAnswerAndUpdate(entry.value),
+                                  child: OptionCard(
+                                    option: entry.key,
+                                    color: isPressed
+                                        ? entry.value == true
+                                            ? correct
+                                            : incorrect
+                                        : neutral,
+                                  ),
+                                ),
+                              ).toList(),
+                            ],
+                          ),
+                        );
+                      }
+                    }
+                    return Center(
+                      child: Text('No hay preguntas disponibles'),
+                    );
+                  },
                 ),
-              ],
-            ),
-          );
-        }
-        return const SizedBox.shrink(); // Para manejar todos los casos
-      },
+      floatingActionButton: errorMessage.isEmpty
+          ? GestureDetector(
+              onTap: () async {
+                if (isLoading) return;
+                
+                final questions = await _questions;
+                if (questions.isNotEmpty) {
+                  nextQuestion(questions.length);
+                }
+              },
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10.0),
+                child: NextButton(),
+              ),
+            )
+          : null,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
