@@ -1,20 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:gif/gif.dart'; // Biblioteca correcta para GIFs
-//import 'package:app_quiz/screens/login.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:gif/gif.dart';
 import 'package:prueba_app/screens/home_screen.dart';
-import 'niveles_api.dart';
-import 'temas_screen.dart';
 
-class Niveles extends StatefulWidget {
-  const Niveles({super.key});
-
+class NivelesApi extends StatefulWidget {
+  const NivelesApi({super.key});
   @override
-  State<Niveles> createState() => _NivelesState();
+  State<NivelesApi> createState() => _NivelesApiState();
 }
 
-class _NivelesState extends State<Niveles> with TickerProviderStateMixin {
-  // Controladores para los GIFs
+class _NivelesApiState extends State<NivelesApi> with TickerProviderStateMixin {
   late GifController controllerFacil;
   late GifController controllerIntermedio;
   late GifController controllerDificil;
@@ -25,7 +19,6 @@ class _NivelesState extends State<Niveles> with TickerProviderStateMixin {
     controllerFacil = GifController(vsync: this);
     controllerIntermedio = GifController(vsync: this);
     controllerDificil = GifController(vsync: this);
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
       controllerFacil.repeat(period: const Duration(milliseconds: 2000));
       controllerIntermedio.repeat(period: const Duration(milliseconds: 2000));
@@ -35,51 +28,18 @@ class _NivelesState extends State<Niveles> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    // Liberar recursos
     controllerFacil.dispose();
     controllerIntermedio.dispose();
     controllerDificil.dispose();
     super.dispose();
   }
 
-  // Método para cerrar sesión
-  void cerrarSesion() {
-    FirebaseAuth.instance.signOut().catchError((error) {
-      // Manejar errores si ocurren al cerrar sesión
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error al cerrar sesión: ${error.toString()}')),
-      );
-    });
-  }
-
-  //Navegar a la pantalla de quiz
   void navegarAQuiz(String difficulty) {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => HomeScreen(difficulty: difficulty),
       ),
-    );
-  }
-
-  void navegarPorTipo(String tipo) {
-    if (tipo == 'api') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => NivelesApi()),
-      );
-    } else {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => HomeScreen(difficulty: tipo)),
-      );
-    }
-  }
-
-  void navegarATemas(String tipo) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => TemasScreen(tipo: tipo)),
     );
   }
 
@@ -97,25 +57,8 @@ class _NivelesState extends State<Niveles> with TickerProviderStateMixin {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  GestureDetector(
-                    onTap: cerrarSesion,
-                    child: Container(
-                      padding: EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.black38),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Icon(Icons.logout, color: Colors.blue),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 5.0),
               Text(
-                "Quiz App",
+                "¿Hasta dónde podrás llegar?",
                 style: TextStyle(
                   color: Color(0xFFF45E7A),
                   fontSize: 24.0,
@@ -123,7 +66,7 @@ class _NivelesState extends State<Niveles> with TickerProviderStateMixin {
                 ),
               ),
               Text(
-                "Selecciona el tipo de preguntas",
+                "Selecciona el nivel de dificultad",
                 style: TextStyle(
                   color: Colors.black38,
                   fontSize: 24.0,
@@ -131,13 +74,13 @@ class _NivelesState extends State<Niveles> with TickerProviderStateMixin {
                 ),
               ),
               SizedBox(height: 20.0),
-              // Botón para preguntas de la API
+              // Nivel Fácil
               GestureDetector(
-                onTap: () => navegarPorTipo('api'),
+                onTap: () => navegarAQuiz('facil'),
                 child: Stack(
                   children: [
                     Container(
-                      margin: EdgeInsets.only(top: 30),
+                      margin: EdgeInsets.only(top: 50),
                       child: Material(
                         elevation: 5.0,
                         borderRadius: BorderRadius.circular(30),
@@ -178,7 +121,7 @@ class _NivelesState extends State<Niveles> with TickerProviderStateMixin {
                               ),
                               SizedBox(height: 10.0),
                               Text(
-                                "¿Quieres ir más allá?",
+                                "Quien no!",
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 20.0,
@@ -186,7 +129,7 @@ class _NivelesState extends State<Niveles> with TickerProviderStateMixin {
                                 ),
                               ),
                               Text(
-                                "Prueba la versión mejorada",
+                                "Nivel facil",
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 24.0,
@@ -198,17 +141,36 @@ class _NivelesState extends State<Niveles> with TickerProviderStateMixin {
                         ),
                       ),
                     ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 30),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(15),
+                            child: Gif(
+                              image: AssetImage("gifs/facil.gif"),
+                              controller: controllerFacil,
+                              height: 120,
+                              width: 120,
+                              fit: BoxFit.cover,
+                              autostart: Autostart.loop,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
+              // Nivel Intermedio
               SizedBox(height: 30),
-              // Botón para preguntas de verdadero/falso
               GestureDetector(
-                onTap: () => navegarATemas('true_false'),
+                onTap: () => navegarAQuiz('intermedio'),
                 child: Stack(
                   children: [
                     Container(
-                      margin: EdgeInsets.only(top: 30),
+                      margin: EdgeInsets.only(top: 50),
                       child: Material(
                         elevation: 5.0,
                         borderRadius: BorderRadius.circular(30),
@@ -242,11 +204,14 @@ class _NivelesState extends State<Niveles> with TickerProviderStateMixin {
                                   borderRadius:
                                       BorderRadiusDirectional.circular(10),
                                 ),
-                                child: Icon(Icons.check, color: Colors.white),
+                                child: Icon(
+                                  Icons.play_arrow,
+                                  color: Colors.white,
+                                ),
                               ),
                               SizedBox(height: 10.0),
                               Text(
-                                "Falso y Verdadero",
+                                "Tu puedes",
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 20.0,
@@ -254,7 +219,7 @@ class _NivelesState extends State<Niveles> with TickerProviderStateMixin {
                                 ),
                               ),
                               Text(
-                                "Preguntas de verdadero o falso",
+                                "Nivel Intermedio",
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 24.0,
@@ -266,17 +231,36 @@ class _NivelesState extends State<Niveles> with TickerProviderStateMixin {
                         ),
                       ),
                     ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 30),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(15),
+                            child: Gif(
+                              image: AssetImage("gifs/intermedio.gif"),
+                              controller: controllerIntermedio,
+                              height: 120,
+                              width: 120,
+                              fit: BoxFit.cover,
+                              autostart: Autostart.loop,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
+              // Nivel Difícil
               SizedBox(height: 30),
-              // Botón para preguntas abiertas
               GestureDetector(
-                onTap: () => navegarATemas('short'),
+                onTap: () => navegarAQuiz('dificil'),
                 child: Stack(
                   children: [
                     Container(
-                      margin: EdgeInsets.only(top: 30),
+                      margin: EdgeInsets.only(top: 50),
                       child: Material(
                         elevation: 5.0,
                         borderRadius: BorderRadius.circular(30),
@@ -310,11 +294,14 @@ class _NivelesState extends State<Niveles> with TickerProviderStateMixin {
                                   borderRadius:
                                       BorderRadiusDirectional.circular(10),
                                 ),
-                                child: Icon(Icons.edit, color: Colors.white),
+                                child: Icon(
+                                  Icons.play_arrow,
+                                  color: Colors.white,
+                                ),
                               ),
                               SizedBox(height: 10.0),
                               Text(
-                                "Preguntas abiertas",
+                                "Solo intentalo!",
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 20.0,
@@ -322,7 +309,7 @@ class _NivelesState extends State<Niveles> with TickerProviderStateMixin {
                                 ),
                               ),
                               Text(
-                                "Responde con texto",
+                                "Nivel Dificil",
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 24.0,
@@ -334,72 +321,23 @@ class _NivelesState extends State<Niveles> with TickerProviderStateMixin {
                         ),
                       ),
                     ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 30),
-              // Botón para preguntas de ordenar
-              GestureDetector(
-                onTap: () => navegarATemas('order'),
-                child: Stack(
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(top: 30),
-                      child: Material(
-                        elevation: 5.0,
-                        borderRadius: BorderRadius.circular(30),
-                        child: Container(
-                          padding: EdgeInsets.only(
-                            top: 10.0,
-                            bottom: 20.0,
-                            left: 20.0,
-                          ),
-                          width: MediaQuery.of(context).size.width,
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                Color(0xfff6bfea),
-                                Color(0xffcfa7dd),
-                                Color(0xffa58ed2),
-                              ],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
+                    Padding(
+                      padding: const EdgeInsets.only(right: 30),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(15),
+                            child: Gif(
+                              image: AssetImage("gifs/dificil.gif"),
+                              controller: controllerDificil,
+                              height: 120,
+                              width: 120,
+                              fit: BoxFit.cover,
+                              autostart: Autostart.loop,
                             ),
-                            borderRadius: BorderRadius.circular(30),
                           ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(height: 5.0),
-                              Container(
-                                padding: EdgeInsets.all(5),
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.white),
-                                  borderRadius:
-                                      BorderRadiusDirectional.circular(10),
-                                ),
-                                child: Icon(Icons.list, color: Colors.white),
-                              ),
-                              SizedBox(height: 10.0),
-                              Text(
-                                "Ordenar",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20.0,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              Text(
-                                "Arrastra para ordenar",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 24.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                        ],
                       ),
                     ),
                   ],

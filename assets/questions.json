@@ -1,0 +1,178 @@
+[
+    {
+        "id": "1",
+        "type": "multiple",
+        "tema": "Geografía",
+        "title": "¿Cuál es la capital de Francia?",
+        "options": {
+            "París": true,
+            "Londres": false,
+            "Madrid": false,
+            "Berlín": false
+        }
+    },
+    {
+        "id": "2",
+        "type": "true_false",
+        "tema": "Astronomía",
+        "title": "El sol es una estrella.",
+        "answer": true
+    },
+    {
+        "id": "3",
+        "type": "short",
+        "tema": "Literatura",
+        "title": "¿Quién escribió 'Cien años de soledad'?",
+        "answer": "Gabriel García Márquez"
+    },
+    {
+        "id": "1",
+        "type": "short",
+        "tema": "Literatura",
+        "title": "¿Quién escribió 'Don Quijote de la Mancha'?",
+        "answer": "Miguel de Cervantes"
+    },
+    {
+        "id": "2",
+        "type": "short",
+        "tema": "Literatura",
+        "title": "¿Qué autor escribió 'La Odisea'?",
+        "answer": "Homero"
+    },
+    {
+        "id": "3",
+        "type": "short",
+        "tema": "Literatura",
+        "title": "¿Quién escribió 'Cien años de soledad'?",
+        "answer": "Gabriel García Márquez"
+    },
+    {
+        "id": "4",
+        "type": "short",
+        "tema": "Literatura",
+        "title": "¿Quién es el autor de 'Romeo y Julieta'?",
+        "answer": "William Shakespeare"
+    },
+    {
+        "id": "5",
+        "type": "short",
+        "tema": "Literatura",
+        "title": "¿Qué escritor chileno ganó el Premio Nobel en 1945?",
+        "answer": "Gabriela Mistral"
+    },
+    {
+        "id": "6",
+        "type": "short",
+        "tema": "Literatura",
+        "title": "¿Qué obra famosa comienza con 'En un lugar de la Mancha...’?",
+        "answer": "Don Quijote de la Mancha"
+    },
+    {
+        "id": "7",
+        "type": "short",
+        "tema": "Literatura",
+        "title": "¿Quién escribió 'La metamorfosis'?",
+        "answer": "Franz Kafka"
+    },
+    {
+        "id": "8",
+        "type": "short",
+        "tema": "Literatura",
+        "title": "¿Qué autor argentino escribió 'Ficciones'?",
+        "answer": "Jorge Luis Borges"
+    },
+    {
+        "id": "9",
+        "type": "short",
+        "tema": "Literatura",
+        "title": "¿Quién escribió 'Pedro Páramo'?",
+        "answer": "Juan Rulfo"
+    },
+    {
+        "id": "10",
+        "type": "short",
+        "tema": "Literatura",
+        "title": "¿Quién es el autor de 'Crimen y castigo'?",
+        "answer": "Fiódor Dostoyevski"
+    },
+    {
+        "id": "11",
+        "type": "order",
+        "tema": "Astronomía",
+        "title": "Ordena los planetas desde el más cercano al sol.",
+        "options": [
+            "Venus",
+            "Mercurio",
+            "Tierra",
+            "Marte"
+        ],
+        "answer": [
+            "Mercurio",
+            "Venus",
+            "Tierra",
+            "Marte"
+        ]
+    },
+    {
+        "id": "12",
+        "type": "true_false",
+        "tema": "Historia",
+        "title": "La Gran Muralla China es visible desde la Luna.",
+        "answer": false
+    },
+    {
+        "id": "13",
+        "type": "true_false",
+        "tema": "Matemáticas",
+        "title": "El número pi es exactamente 3.14.",
+        "answer": false
+    },
+    {
+        "id": "14",
+        "type": "short",
+        "tema": "Astronomía",
+        "title": "¿En qué año llegó el hombre a la Luna?",
+        "answer": "1969"
+    },
+    {
+        "id": "15",
+        "type": "short",
+        "tema": "Matemáticas",
+        "title": "¿Cuál es el resultado de 7 x 8?",
+        "answer": "56"
+    },
+    {
+        "id": "16",
+        "type": "order",
+        "tema": "Historia",
+        "title": "Ordena los siguientes eventos históricos: Descubrimiento de América, Revolución Francesa, Independencia de México.",
+        "options": [
+            "Independencia de México",
+            "Descubrimiento de América",
+            "Revolución Francesa"
+        ],
+        "answer": [
+            "Descubrimiento de América",
+            "Revolución Francesa",
+            "Independencia de México"
+        ]
+    },
+    {
+        "id": "17",
+        "type": "order",
+        "tema": "Matemáticas",
+        "title": "Ordena los números de menor a mayor.",
+        "options": [
+            "15",
+            "3",
+            "8",
+            "1"
+        ],
+        "answer": [
+            "1",
+            "3",
+            "8",
+            "15"
+        ]
+    }
+]
