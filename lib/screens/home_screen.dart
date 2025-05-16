@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../constants.dart';
 import '../models/question_model.dart';
-import '../widgets/question_widget.dart';
+import '../widgets/question_widget.dart'; 
 import '../widgets/next_button.dart';
 import '../widgets/option_card.dart';
 import '../widgets/result_box.dart';
 import '../models/api_service.dart'; // Importar el servicio de API
 import 'dart:async';
+
+import '../models/local_question_loader.dart';
 
 //Se modifico este archivo solo para agregar un LogOut
 
@@ -22,6 +24,7 @@ class HomeScreen extends StatefulWidget {
 
 class HomeScreenState extends State<HomeScreen> {
   final ApiService apiService = ApiService();
+  final LocalQuestionLoader localLoader = LocalQuestionLoader();
   late Future<List<Question>> _questions;
 
   int index = 0;
@@ -62,19 +65,35 @@ class HomeScreenState extends State<HomeScreen> {
       isLoading = true;
       errorMessage = '';
     });
-
-    _questions = apiService.fetchQuestionsByDifficulty(widget.difficulty);
-    
-    _questions.then((_) {
-      setState(() {
-        isLoading = false;
-      });
-    }).catchError((error) {
-      setState(() {
-        isLoading = false;
-        errorMessage = 'Error al cargar preguntas: ${error.toString()}';
-      });
-    });
+    // Si es tipo API clásico
+    if (widget.difficulty == 'facil' ||
+        widget.difficulty == 'intermedio' ||
+        widget.difficulty == 'dificil') {
+      _questions = apiService.fetchQuestionsByDifficulty(widget.difficulty);
+    } else if (widget.difficulty == 'api') {
+      // fallback, no debería usarse
+      _questions = Future.value([]);
+    } else if (widget.difficulty.contains('_')) {
+      final parts = widget.difficulty.split('_');
+      final tipo = parts[0];
+      final tema = parts.sublist(1).join('_');
+      _questions = localLoader.loadQuestionsByTypeAndTema(tipo, tema);
+    } else {
+      // fallback
+      _questions = Future.value([]);
+    }
+    _questions
+        .then((_) {
+          setState(() {
+            isLoading = false;
+          });
+        })
+        .catchError((error) {
+          setState(() {
+            isLoading = false;
+            errorMessage = 'Error al cargar preguntas: ${error.toString()}';
+          });
+        });
   }
 
   void nextQuestion(int questionLength) {
@@ -236,19 +255,20 @@ class HomeScreenState extends State<HomeScreen> {
                             );
                           } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
                             var extractedData = snapshot.data!;
-                            return Container(
-                              width: double.infinity,
-                              padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                              child: Column(
+                            final current = extractedData[index];
+                            Widget questionWidget;
+                            
+                            if (current.type == 'multiple' || current.type == null) {
+                              questionWidget = Column(
                                 children: [
                                   QuestionWidget(
                                     indexAction: index,
-                                    question: extractedData[index].title,
+                                    question: current.title,
                                     totalQuestions: extractedData.length,
                                   ),
                                   const Divider(color: Colors.white),
                                   const SizedBox(height: 25.0),
-                                  ...extractedData[index].options.entries.map((entry) => 
+                                  ...current.options!.entries.map((entry) => 
                                     GestureDetector(
                                       onTap: () => checkAnswerAndUpdate(entry.value),
                                       child: OptionCard(
@@ -262,7 +282,96 @@ class HomeScreenState extends State<HomeScreen> {
                                     ),
                                   ).toList(),
                                 ],
-                              ),
+                              );
+                            } else if (current.type == 'true_false') {
+                              questionWidget = Column(
+                                children: [
+                                  QuestionWidget(
+                                    indexAction: index,
+                                    question: current.title,
+                                    totalQuestions: extractedData.length,
+                                  ),
+                                  const Divider(color: Colors.white),
+                                  const SizedBox(height: 25.0),
+                                  ...current.options!.entries.map((entry) => 
+                                    GestureDetector(
+                                      onTap: () => checkAnswerAndUpdate(entry.value),
+                                      child: OptionCard(
+                                        option: entry.key,
+                                        color: isPressed
+                                            ? entry.value == true
+                                                ? correct
+                                                : incorrect
+                                            : Colors.white,
+                                      ),
+                                    ),
+                                  ).toList(),
+                                ],
+                              );
+                            } else if (current.type == 'short') {
+                              questionWidget = Column(
+                                children: [
+                                  QuestionWidget(
+                                    indexAction: index,
+                                    question: current.title,
+                                    totalQuestions: extractedData.length,
+                                  ),
+                                  const Divider(color: Colors.white),
+                                  const SizedBox(height: 25.0),
+                                  ShortAnswerWidget(
+                                    onValidate: (userAnswer) {
+                                      if (isAlreadySelected) return;
+                                      if (userAnswer.trim().toLowerCase() ==
+                                          (current.answer ?? '')
+                                              .trim()
+                                              .toLowerCase()) {
+                                        score++;
+                                      }
+                                      setState(() {
+                                        isPressed = true;
+                                        isAlreadySelected = true;
+                                      });
+                                    },
+                                    isPressed: isPressed,
+                                    correctAnswer: current.answer ?? '',
+                                  ),
+                                ],
+                              );
+                            } else if (current.type == 'order') {
+                              questionWidget = Column(
+                                children: [
+                                  QuestionWidget(
+                                    indexAction: index,
+                                    question: current.title,
+                                    totalQuestions: extractedData.length,
+                                  ),
+                                  const Divider(color: Colors.white),
+                                  const SizedBox(height: 25.0),
+                                  OrderWidget(
+                                    options: current.orderOptions!,
+                                    correctOrder: current.correctOrder!,
+                                    onValidate: (isCorrect) {
+                                      if (isAlreadySelected) return;
+                                      if (isCorrect) score++;
+                                      setState(() {
+                                        isPressed = true;
+                                        isAlreadySelected = true;
+                                      });
+                                    },
+                                    isPressed: isPressed,
+                                  ),
+                                ],
+                              );
+                            } else {
+                              questionWidget = Center(
+                                child: Text('Tipo de pregunta no soportado', style: TextStyle(color: Colors.white)),
+                              );
+                            }
+                            
+                            return Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                              child: questionWidget,
                             );
                           }
                         }
@@ -291,5 +400,149 @@ class HomeScreenState extends State<HomeScreen> {
           : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
+  }
+}
+
+// Widgets para respuesta corta y ordenar
+class ShortAnswerWidget extends StatefulWidget {
+  final void Function(String) onValidate;
+  final bool isPressed;
+  final String correctAnswer;
+  const ShortAnswerWidget({
+    super.key,
+    required this.onValidate,
+    required this.isPressed,
+    required this.correctAnswer,
+  });
+  @override
+  State<ShortAnswerWidget> createState() => _ShortAnswerWidgetState();
+}
+
+class _ShortAnswerWidgetState extends State<ShortAnswerWidget> {
+  final TextEditingController controller = TextEditingController();
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        TextField(
+          controller: controller,
+          enabled: !widget.isPressed,
+          decoration: InputDecoration(
+            labelText: 'Respuesta',
+            border: OutlineInputBorder(),
+            fillColor: Colors.white,
+            filled: true,
+          ),
+          style: TextStyle(color: Colors.black),
+        ),
+        const SizedBox(height: 10),
+        ElevatedButton(
+          onPressed:
+              widget.isPressed
+                  ? null
+                  : () => widget.onValidate(controller.text),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.white,
+            foregroundColor: Color(0xFFAA4465),
+          ),
+          child: Text('Validar'),
+        ),
+        if (widget.isPressed)
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: Container(
+              padding: EdgeInsets.all(4),
+              color: Colors.white,
+              child: Text(
+                'Respuesta correcta: ${widget.correctAnswer}',
+                style: TextStyle(color: correct),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+class OrderWidget extends StatefulWidget {
+  final List<String> options;
+  final List<String> correctOrder;
+  final void Function(bool) onValidate;
+  final bool isPressed;
+  const OrderWidget({
+    super.key,
+    required this.options,
+    required this.correctOrder,
+    required this.onValidate,
+    required this.isPressed,
+  });
+  @override
+  State<OrderWidget> createState() => _OrderWidgetState();
+}
+
+class _OrderWidgetState extends State<OrderWidget> {
+  late List<String> userOrder;
+  @override
+  void initState() {
+    super.initState();
+    userOrder = List<String>.from(widget.options);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        ReorderableListView(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          onReorder: (oldIndex, newIndex) {
+            setState(() {
+              if (newIndex > oldIndex) newIndex--;
+              final item = userOrder.removeAt(oldIndex);
+              userOrder.insert(newIndex, item);
+            });
+          },
+          children: [
+            for (final item in userOrder)
+              ListTile(
+                key: ValueKey(item),
+                title: Text(item),
+                tileColor: Colors.white,
+                textColor: Colors.black,
+              ),
+          ],
+        ),
+        const SizedBox(height: 10),
+        ElevatedButton(
+          onPressed:
+              widget.isPressed ? null : () => widget.onValidate(_isCorrect()),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.white,
+            foregroundColor: Color(0xFFAA4465),
+          ),
+          child: Text('Validar'),
+        ),
+        if (widget.isPressed)
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: Container(
+              padding: EdgeInsets.all(8),
+              color: Colors.white,
+              child: Text(
+                _isCorrect() ? '¡Orden correcto!' : 'Orden incorrecto',
+                style: TextStyle(color: _isCorrect() ? correct : incorrect),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+
+  bool _isCorrect() {
+    if (userOrder.length != widget.correctOrder.length) return false;
+    for (int i = 0; i < userOrder.length; i++) {
+      if (userOrder[i] != widget.correctOrder[i]) return false;
+    }
+    return true;
   }
 }

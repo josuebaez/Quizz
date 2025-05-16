@@ -74,7 +74,7 @@ class ResultBox extends StatelessWidget {
                     color: Colors.lightGreenAccent,
                     size: 18.0,
                   ),
-                  SizedBox(width: 8.0),
+                  SizedBox(width: 8.0), 
                   Text(
                     'Iniciar de nuevo',
                     style: TextStyle(

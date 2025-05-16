@@ -8,7 +8,7 @@ class QuestionWidget extends StatelessWidget {
   final int indexAction;
   final int totalQuestions;
    
-  @override
+  @override 
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.centerLeft,
