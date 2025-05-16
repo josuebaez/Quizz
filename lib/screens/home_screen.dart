@@ -7,6 +7,7 @@ import '../widgets/next_button.dart';
 import '../widgets/option_card.dart';
 import '../widgets/result_box.dart';
 import '../models/api_service.dart'; // Importar el servicio de API
+import 'dart:async';
 
 //Se modifico este archivo solo para agregar un LogOut
 
@@ -29,11 +30,31 @@ class HomeScreenState extends State<HomeScreen> {
   bool isAlreadySelected = false;
   bool isLoading = true;
   String errorMessage = '';
+  late Timer _timer;
+  int _seconds = 0;
+  String finalTime = '';
+  String get timerText => '${(_seconds ~/ 60).toString().padLeft(2, '0')}:${(_seconds % 60).toString().padLeft(2, '0')}';
+
+  // Definimos los colores para el degradado
+  final Color guindaClaro = Color(0xFFAA4465); // Guinda claro
+  final Color azulClaro = Color(0xFF7FB3D5);   // Azul claro
 
   @override
   void initState() {
     super.initState();
     _loadQuestions();
+
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() {
+        _seconds++;
+      });
+    });
+  }
+
+  @override
+  void dispose(){
+    _timer.cancel();
+    super.dispose();
   }
 
   void _loadQuestions() {
@@ -58,6 +79,8 @@ class HomeScreenState extends State<HomeScreen> {
 
   void nextQuestion(int questionLength) {
     if (index == questionLength - 1) {
+      _timer.cancel();
+      finalTime = timerText;
       showDialog(
         context: context,
         barrierDismissible: false,
@@ -65,6 +88,7 @@ class HomeScreenState extends State<HomeScreen> {
           result: score,
           questionLeght: questionLength,
           onPressed: startOver,
+          completionTime: finalTime,
         ),
       );
     } else {
@@ -106,122 +130,149 @@ class HomeScreenState extends State<HomeScreen> {
       score = 0;
       isPressed = false;
       isAlreadySelected = false;
+      _seconds = 0;
+      finalTime = '';
     });
+
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() {
+        _seconds++;
+      });
+    });
+
     _loadQuestions();
     Navigator.pop(context);
-  }
-
-  void cerrarSesion() {
-    FirebaseAuth.instance.signOut().catchError((error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error al cerrar sesión: ${error.toString()}')),
-      );
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: background,
+      // Aplicamos el degradado como fondo usando un BoxDecoration
+      extendBodyBehindAppBar: true,  // Para que el degradado se extienda detrás del AppBar
       appBar: AppBar(
-        backgroundColor: background,
-        shadowColor: Colors.transparent,
+        backgroundColor: Colors.transparent, // AppBar transparente
+        elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
           tooltip: 'Volver',
         ),
-        title: Text('Nivel ${widget.difficulty}'),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.timer, color: Colors.white, size: 18),
+            SizedBox(width: 4),
+            Text(
+              timerText,
+              style: const TextStyle(fontSize: 16.0, color: Colors.white),
+            ),
+          ],
+        ),
+        centerTitle: true,
         actions: [
-          /*IconButton(
-            icon: Icon(Icons.logout),
-            onPressed: cerrarSesion,
-            tooltip: 'Cerrar Sesión',
-          ),*/
           Padding(
-            padding: const EdgeInsets.all(18.0),
-            child: Text(
-              'Score: $score',
-              style: const TextStyle(fontSize: 18.0),
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Center(
+              child: Text(
+                'Score: $score',
+                style: const TextStyle(fontSize: 16.0, color: Colors.white),
+              ),
             ),
           ),
         ],
       ),
-      body: isLoading
-          ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircularProgressIndicator(),
-                  SizedBox(height: 20),
-                  Text('Cargando preguntas...',
-                      style: TextStyle(fontSize: 16)),
-                ],
-              ),
-            )
-          : errorMessage.isNotEmpty
+      body: Container(
+        // Aquí aplicamos el degradado de fondo
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [guindaClaro, azulClaro],
+          ),
+        ),
+        child: SafeArea(
+          child: isLoading
               ? Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.error_outline, size: 60, color: incorrect),
+                      CircularProgressIndicator(color: Colors.white),
                       SizedBox(height: 20),
-                      Text(errorMessage,
-                          style: TextStyle(fontSize: 16),
-                          textAlign: TextAlign.center),
-                      SizedBox(height: 20),
-                      ElevatedButton(
-                        onPressed: _loadQuestions,
-                        child: Text('Reintentar'),
-                      ),
+                      Text('Cargando preguntas...',
+                          style: TextStyle(fontSize: 16, color: Colors.white)),
                     ],
                   ),
                 )
-              : FutureBuilder<List<Question>>(
-                  future: _questions,
-                  builder: (ctx, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done) {
-                      if (snapshot.hasError) {
-                        return Center(
-                          child: Text('${snapshot.error}'),
-                        );
-                      } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                        var extractedData = snapshot.data!;
-                        return Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                          child: Column(
-                            children: [
-                              QuestionWidget(
-                                indexAction: index,
-                                question: extractedData[index].title,
-                                totalQuestions: extractedData.length,
-                              ),
-                              const Divider(color: neutral),
-                              const SizedBox(height: 25.0),
-                              ...extractedData[index].options.entries.map((entry) => 
-                                GestureDetector(
-                                  onTap: () => checkAnswerAndUpdate(entry.value),
-                                  child: OptionCard(
-                                    option: entry.key,
-                                    color: isPressed
-                                        ? entry.value == true
-                                            ? correct
-                                            : incorrect
-                                        : neutral,
-                                  ),
-                                ),
-                              ).toList(),
-                            ],
+              : errorMessage.isNotEmpty
+                  ? Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.error_outline, size: 60, color: Colors.white),
+                          SizedBox(height: 20),
+                          Text(errorMessage,
+                              style: TextStyle(fontSize: 16, color: Colors.white),
+                              textAlign: TextAlign.center),
+                          SizedBox(height: 20),
+                          ElevatedButton(
+                            onPressed: _loadQuestions,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              foregroundColor: guindaClaro,
+                            ),
+                            child: Text('Reintentar'),
                           ),
+                        ],
+                      ),
+                    )
+                  : FutureBuilder<List<Question>>(
+                      future: _questions,
+                      builder: (ctx, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          if (snapshot.hasError) {
+                            return Center(
+                              child: Text('${snapshot.error}', style: TextStyle(color: Colors.white)),
+                            );
+                          } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                            var extractedData = snapshot.data!;
+                            return Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                              child: Column(
+                                children: [
+                                  QuestionWidget(
+                                    indexAction: index,
+                                    question: extractedData[index].title,
+                                    totalQuestions: extractedData.length,
+                                  ),
+                                  const Divider(color: Colors.white),
+                                  const SizedBox(height: 25.0),
+                                  ...extractedData[index].options.entries.map((entry) => 
+                                    GestureDetector(
+                                      onTap: () => checkAnswerAndUpdate(entry.value),
+                                      child: OptionCard(
+                                        option: entry.key,
+                                        color: isPressed
+                                            ? entry.value == true
+                                                ? correct
+                                                : incorrect
+                                            : Colors.white,
+                                      ),
+                                    ),
+                                  ).toList(),
+                                ],
+                              ),
+                            );
+                          }
+                        }
+                        return Center(
+                          child: Text('No hay preguntas disponibles', style: TextStyle(color: Colors.white)),
                         );
-                      }
-                    }
-                    return Center(
-                      child: Text('No hay preguntas disponibles'),
-                    );
-                  },
-                ),
+                      },
+                    ),
+        ),
+      ),
       floatingActionButton: errorMessage.isEmpty
           ? GestureDetector(
               onTap: () async {
