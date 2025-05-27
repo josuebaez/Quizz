@@ -54,9 +54,8 @@ class TemasScreen extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder:
-                              (context) => HomeScreen(
-                                difficulty: tipo + '_' + tema.toLowerCase(),
-                              ),
+                              (context) =>
+                                  HomeScreen(difficulty: tipo + '_' + tema),
                         ),
                       );
                     },

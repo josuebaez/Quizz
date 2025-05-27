@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../constants.dart';
 import '../models/question_model.dart';
-import '../widgets/question_widget.dart'; 
+import '../widgets/question_widget.dart';
 import '../widgets/next_button.dart';
 import '../widgets/option_card.dart';
 import '../widgets/result_box.dart';
@@ -36,11 +36,12 @@ class HomeScreenState extends State<HomeScreen> {
   late Timer _timer;
   int _seconds = 0;
   String finalTime = '';
-  String get timerText => '${(_seconds ~/ 60).toString().padLeft(2, '0')}:${(_seconds % 60).toString().padLeft(2, '0')}';
+  String get timerText =>
+      '${(_seconds ~/ 60).toString().padLeft(2, '0')}:${(_seconds % 60).toString().padLeft(2, '0')}';
 
   // Definimos los colores para el degradado
   final Color guindaClaro = Color(0xFFAA4465); // Guinda claro
-  final Color azulClaro = Color(0xFF7FB3D5);   // Azul claro
+  final Color azulClaro = Color(0xFF7FB3D5); // Azul claro
 
   @override
   void initState() {
@@ -55,7 +56,7 @@ class HomeScreenState extends State<HomeScreen> {
   }
 
   @override
-  void dispose(){
+  void dispose() {
     _timer.cancel();
     super.dispose();
   }
@@ -65,21 +66,25 @@ class HomeScreenState extends State<HomeScreen> {
       isLoading = true;
       errorMessage = '';
     });
-    // Si es tipo API clásico
     if (widget.difficulty == 'facil' ||
         widget.difficulty == 'intermedio' ||
         widget.difficulty == 'dificil') {
       _questions = apiService.fetchQuestionsByDifficulty(widget.difficulty);
     } else if (widget.difficulty == 'api') {
-      // fallback, no debería usarse
       _questions = Future.value([]);
     } else if (widget.difficulty.contains('_')) {
-      final parts = widget.difficulty.split('_');
-      final tipo = parts[0];
-      final tema = parts.sublist(1).join('_');
+      String tipo;
+      String tema;
+      if (widget.difficulty.startsWith('true_false_')) {
+        tipo = 'true_false';
+        tema = widget.difficulty.substring('true_false_'.length);
+      } else {
+        final parts = widget.difficulty.split('_');
+        tipo = parts[0];
+        tema = parts.sublist(1).join('_');
+      }
       _questions = localLoader.loadQuestionsByTypeAndTema(tipo, tema);
     } else {
-      // fallback
       _questions = Future.value([]);
     }
     _questions
@@ -103,12 +108,13 @@ class HomeScreenState extends State<HomeScreen> {
       showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (ctx) => ResultBox(
-          result: score,
-          questionLeght: questionLength,
-          onPressed: startOver,
-          completionTime: finalTime,
-        ),
+        builder:
+            (ctx) => ResultBox(
+              result: score,
+              questionLeght: questionLength,
+              onPressed: startOver,
+              completionTime: finalTime,
+            ),
       );
     } else {
       if (isPressed) {
@@ -167,7 +173,8 @@ class HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       // Aplicamos el degradado como fondo usando un BoxDecoration
-      extendBodyBehindAppBar: true,  // Para que el degradado se extienda detrás del AppBar
+      extendBodyBehindAppBar:
+          true, // Para que el degradado se extienda detrás del AppBar
       appBar: AppBar(
         backgroundColor: Colors.transparent, // AppBar transparente
         elevation: 0,
@@ -211,193 +218,228 @@ class HomeScreenState extends State<HomeScreen> {
           ),
         ),
         child: SafeArea(
-          child: isLoading
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CircularProgressIndicator(color: Colors.white),
-                      SizedBox(height: 20),
-                      Text('Cargando preguntas...',
-                          style: TextStyle(fontSize: 16, color: Colors.white)),
-                    ],
-                  ),
-                )
-              : errorMessage.isNotEmpty
+          child:
+              isLoading
                   ? Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.error_outline, size: 60, color: Colors.white),
-                          SizedBox(height: 20),
-                          Text(errorMessage,
-                              style: TextStyle(fontSize: 16, color: Colors.white),
-                              textAlign: TextAlign.center),
-                          SizedBox(height: 20),
-                          ElevatedButton(
-                            onPressed: _loadQuestions,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              foregroundColor: guindaClaro,
-                            ),
-                            child: Text('Reintentar'),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CircularProgressIndicator(color: Colors.white),
+                        SizedBox(height: 20),
+                        Text(
+                          'Cargando preguntas...',
+                          style: TextStyle(fontSize: 16, color: Colors.white),
+                        ),
+                      ],
+                    ),
+                  )
+                  : errorMessage.isNotEmpty
+                  ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.error_outline,
+                          size: 60,
+                          color: Colors.white,
+                        ),
+                        SizedBox(height: 20),
+                        Text(
+                          errorMessage,
+                          style: TextStyle(fontSize: 16, color: Colors.white),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(height: 20),
+                        ElevatedButton(
+                          onPressed: _loadQuestions,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            foregroundColor: guindaClaro,
                           ),
-                        ],
-                      ),
-                    )
+                          child: Text('Reintentar'),
+                        ),
+                      ],
+                    ),
+                  )
                   : FutureBuilder<List<Question>>(
-                      future: _questions,
-                      builder: (ctx, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.done) {
-                          if (snapshot.hasError) {
-                            return Center(
-                              child: Text('${snapshot.error}', style: TextStyle(color: Colors.white)),
+                    future: _questions,
+                    builder: (ctx, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        if (snapshot.hasError) {
+                          return Center(
+                            child: Text(
+                              '${snapshot.error}',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          );
+                        } else if (snapshot.hasData &&
+                            snapshot.data!.isNotEmpty) {
+                          var extractedData = snapshot.data!;
+                          final current = extractedData[index];
+                          Widget questionWidget;
+
+                          if (current.type == 'multiple' ||
+                              current.type == null) {
+                            questionWidget = Column(
+                              children: [
+                                QuestionWidget(
+                                  indexAction: index,
+                                  question: current.title,
+                                  totalQuestions: extractedData.length,
+                                ),
+                                const Divider(color: Colors.white),
+                                const SizedBox(height: 25.0),
+                                ...current.options!.entries
+                                    .map(
+                                      (entry) => GestureDetector(
+                                        onTap:
+                                            () => checkAnswerAndUpdate(
+                                              entry.value,
+                                            ),
+                                        child: OptionCard(
+                                          option: entry.key,
+                                          color:
+                                              isPressed
+                                                  ? entry.value == true
+                                                      ? correct
+                                                      : incorrect
+                                                  : Colors.white,
+                                        ),
+                                      ),
+                                    )
+                                    .toList(),
+                              ],
                             );
-                          } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                            var extractedData = snapshot.data!;
-                            final current = extractedData[index];
-                            Widget questionWidget;
-                            
-                            if (current.type == 'multiple' || current.type == null) {
-                              questionWidget = Column(
-                                children: [
-                                  QuestionWidget(
-                                    indexAction: index,
-                                    question: current.title,
-                                    totalQuestions: extractedData.length,
-                                  ),
-                                  const Divider(color: Colors.white),
-                                  const SizedBox(height: 25.0),
-                                  ...current.options!.entries.map((entry) => 
-                                    GestureDetector(
-                                      onTap: () => checkAnswerAndUpdate(entry.value),
-                                      child: OptionCard(
-                                        option: entry.key,
-                                        color: isPressed
-                                            ? entry.value == true
-                                                ? correct
-                                                : incorrect
-                                            : Colors.white,
+                          } else if (current.type == 'true_false') {
+                            questionWidget = Column(
+                              children: [
+                                QuestionWidget(
+                                  indexAction: index,
+                                  question: current.title,
+                                  totalQuestions: extractedData.length,
+                                ),
+                                const Divider(color: Colors.white),
+                                const SizedBox(height: 25.0),
+                                ...current.options!.entries
+                                    .map(
+                                      (entry) => GestureDetector(
+                                        onTap:
+                                            () => checkAnswerAndUpdate(
+                                              entry.value,
+                                            ),
+                                        child: OptionCard(
+                                          option: entry.key,
+                                          color:
+                                              isPressed
+                                                  ? entry.value == true
+                                                      ? correct
+                                                      : incorrect
+                                                  : Colors.white,
+                                        ),
                                       ),
-                                    ),
-                                  ).toList(),
-                                ],
-                              );
-                            } else if (current.type == 'true_false') {
-                              questionWidget = Column(
-                                children: [
-                                  QuestionWidget(
-                                    indexAction: index,
-                                    question: current.title,
-                                    totalQuestions: extractedData.length,
-                                  ),
-                                  const Divider(color: Colors.white),
-                                  const SizedBox(height: 25.0),
-                                  ...current.options!.entries.map((entry) => 
-                                    GestureDetector(
-                                      onTap: () => checkAnswerAndUpdate(entry.value),
-                                      child: OptionCard(
-                                        option: entry.key,
-                                        color: isPressed
-                                            ? entry.value == true
-                                                ? correct
-                                                : incorrect
-                                            : Colors.white,
-                                      ),
-                                    ),
-                                  ).toList(),
-                                ],
-                              );
-                            } else if (current.type == 'short') {
-                              questionWidget = Column(
-                                children: [
-                                  QuestionWidget(
-                                    indexAction: index,
-                                    question: current.title,
-                                    totalQuestions: extractedData.length,
-                                  ),
-                                  const Divider(color: Colors.white),
-                                  const SizedBox(height: 25.0),
-                                  ShortAnswerWidget(
-                                    onValidate: (userAnswer) {
-                                      if (isAlreadySelected) return;
-                                      if (userAnswer.trim().toLowerCase() ==
-                                          (current.answer ?? '')
-                                              .trim()
-                                              .toLowerCase()) {
-                                        score++;
-                                      }
-                                      setState(() {
-                                        isPressed = true;
-                                        isAlreadySelected = true;
-                                      });
-                                    },
-                                    isPressed: isPressed,
-                                    correctAnswer: current.answer ?? '',
-                                  ),
-                                ],
-                              );
-                            } else if (current.type == 'order') {
-                              questionWidget = Column(
-                                children: [
-                                  QuestionWidget(
-                                    indexAction: index,
-                                    question: current.title,
-                                    totalQuestions: extractedData.length,
-                                  ),
-                                  const Divider(color: Colors.white),
-                                  const SizedBox(height: 25.0),
-                                  OrderWidget(
-                                    options: current.orderOptions!,
-                                    correctOrder: current.correctOrder!,
-                                    onValidate: (isCorrect) {
-                                      if (isAlreadySelected) return;
-                                      if (isCorrect) score++;
-                                      setState(() {
-                                        isPressed = true;
-                                        isAlreadySelected = true;
-                                      });
-                                    },
-                                    isPressed: isPressed,
-                                  ),
-                                ],
-                              );
-                            } else {
-                              questionWidget = Center(
-                                child: Text('Tipo de pregunta no soportado', style: TextStyle(color: Colors.white)),
-                              );
-                            }
-                            
-                            return Container(
-                              width: double.infinity,
-                              padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                              child: questionWidget,
+                                    )
+                                    .toList(),
+                              ],
+                            );
+                          } else if (current.type == 'short') {
+                            questionWidget = Column(
+                              children: [
+                                QuestionWidget(
+                                  indexAction: index,
+                                  question: current.title,
+                                  totalQuestions: extractedData.length,
+                                ),
+                                const Divider(color: Colors.white),
+                                const SizedBox(height: 25.0),
+                                ShortAnswerWidget(
+                                  onValidate: (userAnswer) {
+                                    if (isAlreadySelected) return;
+                                    if (userAnswer.trim().toLowerCase() ==
+                                        (current.answer ?? '')
+                                            .trim()
+                                            .toLowerCase()) {
+                                      score++;
+                                    }
+                                    setState(() {
+                                      isPressed = true;
+                                      isAlreadySelected = true;
+                                    });
+                                  },
+                                  isPressed: isPressed,
+                                  correctAnswer: current.answer ?? '',
+                                ),
+                              ],
+                            );
+                          } else if (current.type == 'order') {
+                            questionWidget = Column(
+                              children: [
+                                QuestionWidget(
+                                  indexAction: index,
+                                  question: current.title,
+                                  totalQuestions: extractedData.length,
+                                ),
+                                const Divider(color: Colors.white),
+                                const SizedBox(height: 25.0),
+                                OrderWidget(
+                                  options: current.orderOptions!,
+                                  correctOrder: current.correctOrder!,
+                                  onValidate: (isCorrect) {
+                                    if (isAlreadySelected) return;
+                                    if (isCorrect) score++;
+                                    setState(() {
+                                      isPressed = true;
+                                      isAlreadySelected = true;
+                                    });
+                                  },
+                                  isPressed: isPressed,
+                                ),
+                              ],
+                            );
+                          } else {
+                            questionWidget = Center(
+                              child: Text(
+                                'Tipo de pregunta no soportado',
+                                style: TextStyle(color: Colors.white),
+                              ),
                             );
                           }
+
+                          return Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10.0,
+                            ),
+                            child: questionWidget,
+                          );
                         }
-                        return Center(
-                          child: Text('No hay preguntas disponibles', style: TextStyle(color: Colors.white)),
-                        );
-                      },
-                    ),
+                      }
+                      return Center(
+                        child: Text(
+                          'No hay preguntas disponibles',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      );
+                    },
+                  ),
         ),
       ),
-      floatingActionButton: errorMessage.isEmpty
-          ? GestureDetector(
-              onTap: () async {
-                if (isLoading) return;
-                
-                final questions = await _questions;
-                if (questions.isNotEmpty) {
-                  nextQuestion(questions.length);
-                }
-              },
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10.0),
-                child: NextButton(),
-              ),
-            )
-          : null,
+      floatingActionButton:
+          errorMessage.isEmpty
+              ? GestureDetector(
+                onTap: () async {
+                  if (isLoading) return;
+
+                  final questions = await _questions;
+                  if (questions.isNotEmpty) {
+                    nextQuestion(questions.length);
+                  }
+                },
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10.0),
+                  child: NextButton(),
+                ),
+              )
+              : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }

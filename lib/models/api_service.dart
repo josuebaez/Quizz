@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'question_model.dart';
-import 'local_question_loader.dart';
 
 class ApiService {
   //Obtener preguntas según el nivel de dificultad
@@ -48,12 +47,5 @@ class ApiService {
     } catch (e) {
       throw Exception("Error de conexión: $e");
     }
-  }
-
-  Future<List<Question>> fetchAllQuestions(String difficulty) async {
-    final localLoader = LocalQuestionLoader();
-    final localQuestions = await localLoader.loadQuestions();
-    final apiQuestions = await fetchQuestionsByDifficulty(difficulty);
-    return [...apiQuestions, ...localQuestions];
   }
 }

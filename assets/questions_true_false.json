@@ -1,0 +1,86 @@
+[
+    {
+        "id": "1",
+        "type": "true_false",
+        "tema": "Astronomía",
+        "title": "El sol es una estrella.",
+        "answer": true
+    },
+    {
+        "id": "2",
+        "type": "true_false",
+        "tema": "Astronomía",
+        "title": "La Luna es más grande que el Sol.",
+        "answer": false
+    },
+    {
+        "id": "3",
+        "type": "true_false",
+        "tema": "Astronomía",
+        "title": "Júpiter es el planeta más grande del sistema solar.",
+        "answer": true
+    },
+    {
+        "id": "4",
+        "type": "true_false",
+        "tema": "Astronomía",
+        "title": "Las estrellas emiten luz propia.",
+        "answer": true
+    },
+    {
+        "id": "5",
+        "type": "true_false",
+        "tema": "Astronomía",
+        "title": "Marte es conocido como el planeta azul.",
+        "answer": false
+    },
+    {
+        "id": "6",
+        "type": "true_false",
+        "tema": "Astronomía",
+        "title": "Saturno tiene un sistema de anillos a su alrededor.",
+        "answer": true
+    },
+    {
+        "id": "7",
+        "type": "true_false",
+        "tema": "Astronomía",
+        "title": "El Sol es un planeta.",
+        "answer": false
+    },
+    {
+        "id": "8",
+        "type": "true_false",
+        "tema": "Astronomía",
+        "title": "La Vía Láctea es la galaxia donde se encuentra nuestro sistema solar.",
+        "answer": true
+    },
+    {
+        "id": "9",
+        "type": "true_false",
+        "tema": "Astronomía",
+        "title": "Plutón sigue siendo considerado un planeta del sistema solar.",
+        "answer": false
+    },
+    {
+        "id": "10",
+        "type": "true_false",
+        "tema": "Astronomía",
+        "title": "Un eclipse solar ocurre cuando la Luna se interpone entre la Tierra y el Sol.",
+        "answer": true
+    },
+    {
+        "id": "2",
+        "type": "true_false",
+        "tema": "Historia",
+        "title": "La Gran Muralla China es visible desde la Luna.",
+        "answer": false
+    },
+    {
+        "id": "3",
+        "type": "true_false",
+        "tema": "Matemáticas",
+        "title": "El número pi es exactamente 3.14.",
+        "answer": false
+    }
+]

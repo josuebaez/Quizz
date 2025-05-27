@@ -3,10 +3,22 @@ import 'package:flutter/services.dart';
 import 'question_model.dart';
 
 class LocalQuestionLoader {
-  Future<List<Question>> loadQuestions() async {
-    final String response = await rootBundle.loadString(
-      'assets/questions.json',
-    );
+  Future<List<Question>> loadQuestionsByType(String tipo) async {
+    String assetPath;
+    switch (tipo) {
+      case 'true_false':
+        assetPath = 'assets/questions_true_false.json';
+        break;
+      case 'short':
+        assetPath = 'assets/questions_short.json';
+        break;
+      case 'order':
+        assetPath = 'assets/questions_order.json';
+        break;
+      default:
+        assetPath = 'assets/questions.json';
+    }
+    final String response = await rootBundle.loadString(assetPath);
     final List<dynamic> data = json.decode(response);
     return data.map((json) => Question.fromJson(json)).toList();
   }
@@ -27,7 +39,7 @@ class LocalQuestionLoader {
     String tipo,
     String tema,
   ) async {
-    final all = await loadQuestions();
+    final all = await loadQuestionsByType(tipo);
     final temaNorm = _normalize(tema);
     return all.where((q) {
       if (q.type != tipo) return false;
