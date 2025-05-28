@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:prueba_app/screens/home_screen.dart';
 import 'niveles_api.dart';
 import 'temas_screen.dart';
+import 'package:prueba_app/screens/progress_screen.dart'; // Asegúrate de importar la pantalla de progreso
 
 class Niveles extends StatefulWidget {
   const Niveles({super.key});
@@ -131,6 +132,31 @@ class _NivelesState extends State<Niveles> with TickerProviderStateMixin {
                 ),
               ),
               SizedBox(height: 20.0),
+              ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ProgressScreen(),
+                    ),
+                  );
+                },
+                icon: Icon(Icons.bar_chart),
+                label: Text('Ver Progreso'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.deepPurple,
+                  foregroundColor: Colors.white,
+                  padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+                  textStyle: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                ),
+              ),
+              SizedBox(height: 20.0),
               // Botón para preguntas de la API
               GestureDetector(
                 onTap: () => navegarPorTipo('api'),
@@ -240,19 +266,29 @@ class _NivelesState extends State<Niveles> with TickerProviderStateMixin {
                                   Container(
                                     padding: EdgeInsets.all(5),
                                     decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.white),
-                                    borderRadius: BorderRadiusDirectional.circular(10),
+                                      border: Border.all(color: Colors.white),
+                                      borderRadius:
+                                          BorderRadiusDirectional.circular(10),
                                     ),
-                                    child: Icon(Icons.check, color: Colors.white),
+                                    child: Icon(
+                                      Icons.check,
+                                      color: Colors.white,
+                                    ),
                                   ),
-                                  SizedBox(width: 10), // Espacio entre los contenedores
+                                  SizedBox(
+                                    width: 10,
+                                  ), // Espacio entre los contenedores
                                   Container(
                                     padding: EdgeInsets.all(5),
                                     decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.white),
-                                    borderRadius: BorderRadiusDirectional.circular(10),
+                                      border: Border.all(color: Colors.white),
+                                      borderRadius:
+                                          BorderRadiusDirectional.circular(10),
                                     ),
-                                    child: Icon(Icons.close, color: Colors.white),
+                                    child: Icon(
+                                      Icons.close,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ],
                               ),

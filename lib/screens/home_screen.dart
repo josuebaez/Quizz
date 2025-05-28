@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import '../constants.dart';
 import '../models/question_model.dart';
 import '../widgets/question_widget.dart';
@@ -10,6 +12,7 @@ import '../models/api_service.dart'; // Importar el servicio de API
 import 'dart:async';
 
 import '../models/local_question_loader.dart';
+import 'progress_screen.dart';
 
 //Se modifico este archivo solo para agregar un LogOut
 
@@ -105,6 +108,7 @@ class HomeScreenState extends State<HomeScreen> {
     if (index == questionLength - 1) {
       _timer.cancel();
       finalTime = timerText;
+      _saveProgress(); // Guardar progreso al terminar
       showDialog(
         context: context,
         barrierDismissible: false,
@@ -167,6 +171,31 @@ class HomeScreenState extends State<HomeScreen> {
 
     _loadQuestions();
     Navigator.pop(context);
+  }
+
+  void _saveProgress() async {
+    final prefs = await SharedPreferences.getInstance();
+    // Usar tipo y tema si están disponibles, si no, usar dificultad
+    String tipo = '';
+    String tema = '';
+    if (widget.difficulty.contains('_')) {
+      if (widget.difficulty.startsWith('true_false_')) {
+        tipo = 'true_false';
+        tema = widget.difficulty.substring('true_false_'.length);
+      } else {
+        final parts = widget.difficulty.split('_');
+        tipo = parts[0];
+        tema = parts.sublist(1).join('_');
+      }
+    } else {
+      tipo = widget.difficulty;
+      tema = 'general';
+    }
+    String key = '${tipo}__${tema}';
+    int prevScore = prefs.getInt(key) ?? 0;
+    if (score > prevScore) {
+      await prefs.setInt(key, score);
+    }
   }
 
   @override
