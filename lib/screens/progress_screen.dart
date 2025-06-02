@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 class ProgressScreen extends StatefulWidget {
   const ProgressScreen({Key? key}) : super(key: key);
@@ -31,53 +32,97 @@ class _ProgressScreenState extends State<ProgressScreen> {
     });
   }
 
+  Widget _buildBarChartForTheme(String theme) {
+    Map<String, int> filteredProgress = {};
+    progress.forEach((key, value) {
+      final parts = key.split('__');
+      if (parts.length == 2 && parts[1] == theme) {
+        filteredProgress[parts[0]] = value;
+      }
+    });
+
+    List<BarChartGroupData> barGroups = [];
+    List<String> xLabels = [];
+    int index = 0;
+    filteredProgress.forEach((tipo, score) {
+      barGroups.add(
+        BarChartGroupData(
+          x: index,
+          barRods: [
+            BarChartRodData(toY: score.toDouble(), color: Colors.blue),
+          ],
+          showingTooltipIndicators: [0],
+        ),
+      );
+      xLabels.add(tipo);
+      index++;
+    });
+
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            theme.toUpperCase(),
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(
+            height: 300, // Altura fija para evitar conflictos de tamaño
+            child: BarChart(
+              BarChartData(
+                alignment: BarChartAlignment.spaceAround,
+                barGroups: barGroups,
+                titlesData: FlTitlesData(
+                  leftTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      reservedSize: 40,
+                      getTitlesWidget: (value, meta) {
+                        return Text(value.toInt().toString());
+                      },
+                    ),
+                  ),
+                  bottomTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      reservedSize: 60,
+                      getTitlesWidget: (value, meta) {
+                        int idx = value.toInt();
+                        if (idx >= 0 && idx < xLabels.length) {
+                          return Text(xLabels[idx], textAlign: TextAlign.center);
+                        }
+                        return const Text('');
+                      },
+                    ),
+                  ),
+                ),
+                gridData: FlGridData(show: true),
+                borderData: FlBorderData(show: true),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Progreso del Usuario')),
-      body:
-          isLoading
-              ? const Center(child: CircularProgressIndicator())
-              : progress.isEmpty
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : progress.isEmpty
               ? const Center(child: Text('No hay progreso guardado'))
-              : ListView(children: _buildProgressList()),
+              : ListView(
+                  children: [
+                    _buildBarChartForTheme('Matemáticas'),
+                    _buildBarChartForTheme('Astronomía'),
+                    _buildBarChartForTheme('Historia'),
+                    _buildBarChartForTheme('Cultura General'),
+                  ],
+                ),
     );
-  }
-
-  List<Widget> _buildProgressList() {
-    // Agrupar por tipo y tema
-    Map<String, Map<String, int>> grouped = {};
-    progress.forEach((key, value) {
-      // key: tipo_tema
-      final parts = key.split('__');
-      if (parts.length == 2) {
-        final tipo = parts[0];
-        final tema = parts[1];
-        grouped.putIfAbsent(tipo, () => {});
-        grouped[tipo]![tema] = value;
-      }
-    });
-    List<Widget> widgets = [];
-    grouped.forEach((tipo, temas) {
-      widgets.add(
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            tipo.toUpperCase(),
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-        ),
-      );
-      temas.forEach((tema, score) {
-        widgets.add(
-          ListTile(
-            title: Text('Tema: $tema'),
-            trailing: Text('Puntuación: $score'),
-          ),
-        );
-      });
-      widgets.add(const Divider());
-    });
-    return widgets;
   }
 }

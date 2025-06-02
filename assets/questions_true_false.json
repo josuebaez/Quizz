@@ -70,17 +70,213 @@
         "answer": true
     },
     {
-        "id": "2",
+        "id": "3",
+        "type": "true_false",
+        "tema": "Matemáticas",
+        "title": "El número pi es exactamente 3.14.",
+        "answer": false
+    },
+    {
+        "id": "4",
+        "type": "true_false",
+        "tema": "Matemáticas",
+        "title": "Un número par es divisible entre 2.",
+        "answer": true
+    },
+    {
+        "id": "5",
+        "type": "true_false",
+        "tema": "Matemáticas",
+        "title": "La suma de los ángulos internos de un triángulo siempre es 180 grados.",
+        "answer": true
+    },
+    {
+        "id": "6",
+        "type": "true_false",
+        "tema": "Matemáticas",
+        "title": "El cero es un número natural.",
+        "answer": true
+    },
+    {
+        "id": "7",
+        "type": "true_false",
+        "tema": "Matemáticas",
+        "title": "La multiplicación siempre da como resultado un número mayor que los factores.",
+        "answer": false
+    },
+    {
+        "id": "8",
+        "type": "true_false",
+        "tema": "Matemáticas",
+        "title": "Un cuadrado tiene cuatro lados iguales y cuatro ángulos rectos.",
+        "answer": true
+    },
+    {
+        "id": "9",
+        "type": "true_false",
+        "tema": "Matemáticas",
+        "title": "El número 1 es un número primo.",
+        "answer": false
+    },
+    {
+        "id": "10",
+        "type": "true_false",
+        "tema": "Matemáticas",
+        "title": "Si un número termina en 0, entonces es múltiplo de 10.",
+        "answer": true
+    },
+    {
+        "id": "11",
+        "type": "true_false",
+        "tema": "Matemáticas",
+        "title": "El área de un rectángulo se obtiene multiplicando la base por la altura.",
+        "answer": true
+    },
+    {
+        "id": "12",
+        "type": "true_false",
+        "tema": "Matemáticas",
+        "title": "Dividir entre cero es una operación válida.",
+        "answer": false
+    },
+    {
+        "id": "1",
         "type": "true_false",
         "tema": "Historia",
         "title": "La Gran Muralla China es visible desde la Luna.",
         "answer": false
     },
     {
+        "id": "2",
+        "type": "true_false",
+        "tema": "Historia",
+        "title": "La Primera Guerra Mundial comenzó en 1914.",
+        "answer": true
+    },
+    {
         "id": "3",
         "type": "true_false",
-        "tema": "Matemáticas",
-        "title": "El número pi es exactamente 3.14.",
+        "tema": "Historia",
+        "title": "Cristóbal Colón llegó a América en 1492.",
+        "answer": true
+    },
+    {
+        "id": "4",
+        "type": "true_false",
+        "tema": "Historia",
+        "title": "Napoleón Bonaparte fue emperador de Alemania.",
+        "answer": false
+    },
+    {
+        "id": "5",
+        "type": "true_false",
+        "tema": "Historia",
+        "title": "La Revolución Mexicana comenzó en el año 1910.",
+        "answer": true
+    },
+    {
+        "id": "6",
+        "type": "true_false",
+        "tema": "Historia",
+        "title": "La Independencia de México se consumó en 1821.",
+        "answer": true
+    },
+    {
+        "id": "7",
+        "type": "true_false",
+        "tema": "Historia",
+        "title": "El Muro de Berlín fue derribado en 1989.",
+        "answer": true
+    },
+    {
+        "id": "8",
+        "type": "true_false",
+        "tema": "Historia",
+        "title": "Los mayas vivieron principalmente en el norte de África.",
+        "answer": false
+    },
+    {
+        "id": "9",
+        "type": "true_false",
+        "tema": "Historia",
+        "title": "Benito Juárez fue presidente de México.",
+        "answer": true
+    },
+    {
+        "id": "10",
+        "type": "true_false",
+        "tema": "Historia",
+        "title": "La Segunda Guerra Mundial terminó en 1945.",
+        "answer": true
+    },
+    {
+        "id": "13",
+        "type": "true_false",
+        "tema": "Cultura general",
+        "title": "La Torre Eiffel se encuentra en París.",
+        "answer": true
+    },
+    {
+        "id": "14",
+        "type": "true_false",
+        "tema": "Cultura general",
+        "title": "El océano más grande del mundo es el Atlántico.",
+        "answer": false
+    },
+    {
+        "id": "15",
+        "type": "true_false",
+        "tema": "Cultura general",
+        "title": "Shakespeare escribió 'Romeo y Julieta'.",
+        "answer": true
+    },
+    {
+        "id": "16",
+        "type": "true_false",
+        "tema": "Cultura general",
+        "title": "Los humanos tienen cuatro pulmones.",
+        "answer": false
+    },
+    {
+        "id": "17",
+        "type": "true_false",
+        "tema": "Cultura general",
+        "title": "La capital de Australia es Sídney.",
+        "answer": false
+    },
+    {
+        "id": "18",
+        "type": "true_false",
+        "tema": "Cultura general",
+        "title": "El Sol es una estrella.",
+        "answer": true
+    },
+    {
+        "id": "19",
+        "type": "true_false",
+        "tema": "Cultura general",
+        "title": "El sushi es un platillo tradicional de Japón.",
+        "answer": true
+    },
+    {
+        "id": "20",
+        "type": "true_false",
+        "tema": "Cultura general",
+        "title": "Albert Einstein ganó el Premio Nobel por la teoría de la relatividad.",
+        "answer": false
+    },
+    {
+        "id": "21",
+        "type": "true_false",
+        "tema": "Cultura general",
+        "title": "En Egipto se encuentran las pirámides de Giza.",
+        "answer": true
+    },
+    {
+        "id": "22",
+        "type": "true_false",
+        "tema": "Cultura general",
+        "title": "La Antártida es el continente más poblado.",
         "answer": false
     }
 ]
