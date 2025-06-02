@@ -1,6 +1,366 @@
 [
     {
+        "id": "1",
+        "type": "order",
+        "tema": "Historia",
+        "title": "Ordena estos eventos en orden cronológico.",
+        "options": [
+            "Revolución Mexicana",
+            "Descubrimiento de América",
+            "Independencia de México",
+            "Conquista de Tenochtitlán"
+        ],
+        "answer": [
+            "Descubrimiento de América",
+            "Conquista de Tenochtitlán",
+            "Independencia de México",
+            "Revolución Mexicana"
+        ]
+    },
+    {
+        "id": "2",
+        "type": "order",
+        "tema": "Historia",
+        "title": "Ordena estos presidentes de México según su mandato.",
+        "options": [
+            "Lázaro Cárdenas",
+            "Benito Juárez",
+            "Porfirio Díaz",
+            "Guadalupe Victoria"
+        ],
+        "answer": [
+            "Guadalupe Victoria",
+            "Benito Juárez",
+            "Porfirio Díaz",
+            "Lázaro Cárdenas"
+        ]
+    },
+    {
+        "id": "3",
+        "type": "order",
+        "tema": "Historia",
+        "title": "Ordena las edades históricas de la humanidad.",
+        "options": [
+            "Edad Moderna",
+            "Edad Media",
+            "Edad Antigua",
+            "Edad Contemporánea"
+        ],
+        "answer": [
+            "Edad Antigua",
+            "Edad Media",
+            "Edad Moderna",
+            "Edad Contemporánea"
+        ]
+    },
+    {
+        "id": "4",
+        "type": "order",
+        "tema": "Historia",
+        "title": "Ordena estos imperios del más antiguo al más reciente.",
+        "options": [
+            "Imperio Romano",
+            "Imperio Otomano",
+            "Imperio Griego",
+            "Imperio Bizantino"
+        ],
+        "answer": [
+            "Imperio Griego",
+            "Imperio Romano",
+            "Imperio Bizantino",
+            "Imperio Otomano"
+        ]
+    },
+    {
+        "id": "5",
+        "type": "order",
+        "tema": "Historia",
+        "title": "Ordena estas guerras según su fecha de inicio.",
+        "options": [
+            "Segunda Guerra Mundial",
+            "Revolución Francesa",
+            "Guerra Civil Española",
+            "Primera Guerra Mundial"
+        ],
+        "answer": [
+            "Revolución Francesa",
+            "Primera Guerra Mundial",
+            "Guerra Civil Española",
+            "Segunda Guerra Mundial"
+        ]
+    },
+    {
+        "id": "6",
+        "type": "order",
+        "tema": "Historia",
+        "title": "Ordena los siglos de menor a mayor.",
+        "options": [
+            "Siglo XIX",
+            "Siglo XVII",
+            "Siglo XVIII",
+            "Siglo XX"
+        ],
+        "answer": [
+            "Siglo XVII",
+            "Siglo XVIII",
+            "Siglo XIX",
+            "Siglo XX"
+        ]
+    },
+    {
+        "id": "7",
+        "type": "order",
+        "tema": "Historia",
+        "title": "Ordena estas culturas prehispánicas por antigüedad.",
+        "options": [
+            "Mexica",
+            "Olmeca",
+            "Maya",
+            "Zapoteca"
+        ],
+        "answer": [
+            "Olmeca",
+            "Zapoteca",
+            "Maya",
+            "Mexica"
+        ]
+    },
+    {
+        "id": "8",
+        "type": "order",
+        "tema": "Historia",
+        "title": "Ordena estas fechas importantes de la historia de México.",
+        "options": [
+            "Constitución de 1917",
+            "Consumación de la Independencia",
+            "Inicio de la Independencia",
+            "Revolución Mexicana"
+        ],
+        "answer": [
+            "Inicio de la Independencia",
+            "Consumación de la Independencia",
+            "Revolución Mexicana",
+            "Constitución de 1917"
+        ]
+    },
+    {
+        "id": "9",
+        "type": "order",
+        "tema": "Historia",
+        "title": "Ordena estos personajes según su época.",
+        "options": [
+            "Napoleón Bonaparte",
+            "Alejandro Magno",
+            "Julio César",
+            "Adolfo Hitler"
+        ],
+        "answer": [
+            "Alejandro Magno",
+            "Julio César",
+            "Napoleón Bonaparte",
+            "Adolfo Hitler"
+        ]
+    },
+    {
+        "id": "10",
+        "type": "order",
+        "tema": "Historia",
+        "title": "Ordena estos movimientos sociales de México.",
+        "options": [
+            "Reforma",
+            "Guerra Cristera",
+            "Independencia",
+            "Revolución"
+        ],
+        "answer": [
+            "Independencia",
+            "Reforma",
+            "Revolución",
+            "Guerra Cristera"
+        ]
+    },
+    {
         "id": "11",
+        "type": "order",
+        "tema": "Matemáticas",
+        "title": "Ordena los números de menor a mayor.",
+        "options": [
+            "15",
+            "8",
+            "22",
+            "3"
+        ],
+        "answer": [
+            "3",
+            "8",
+            "15",
+            "22"
+        ]
+    },
+    {
+        "id": "12",
+        "type": "order",
+        "tema": "Matemáticas",
+        "title": "Ordena las operaciones según su jerarquía.",
+        "options": [
+            "Multiplicación",
+            "Suma",
+            "Paréntesis",
+            "Resta"
+        ],
+        "answer": [
+            "Paréntesis",
+            "Multiplicación",
+            "Suma",
+            "Resta"
+        ]
+    },
+    {
+        "id": "13",
+        "type": "order",
+        "tema": "Matemáticas",
+        "title": "Ordena estas figuras según su número de lados.",
+        "options": [
+            "Pentágono",
+            "Cuadrado",
+            "Triángulo",
+            "Hexágono"
+        ],
+        "answer": [
+            "Triángulo",
+            "Cuadrado",
+            "Pentágono",
+            "Hexágono"
+        ]
+    },
+    {
+        "id": "14",
+        "type": "order",
+        "tema": "Matemáticas",
+        "title": "Ordena estas fracciones de menor a mayor.",
+        "options": [
+            "3/4",
+            "1/2",
+            "2/3",
+            "1/4"
+        ],
+        "answer": [
+            "1/4",
+            "1/2",
+            "2/3",
+            "3/4"
+        ]
+    },
+    {
+        "id": "15",
+        "type": "order",
+        "tema": "Matemáticas",
+        "title": "Ordena estas potencias de menor a mayor.",
+        "options": [
+            "2^4",
+            "2^2",
+            "2^1",
+            "2^3"
+        ],
+        "answer": [
+            "2^1",
+            "2^2",
+            "2^3",
+            "2^4"
+        ]
+    },
+    {
+        "id": "16",
+        "type": "order",
+        "tema": "Matemáticas",
+        "title": "Ordena estas ecuaciones por su grado.",
+        "options": [
+            "Ecuación cuadrática",
+            "Ecuación de segundo grado",
+            "Ecuación lineal",
+            "Ecuación cúbica"
+        ],
+        "answer": [
+            "Ecuación lineal",
+            "Ecuación cuadrática",
+            "Ecuación de segundo grado",
+            "Ecuación cúbica"
+        ]
+    },
+    {
+        "id": "17",
+        "type": "order",
+        "tema": "Matemáticas",
+        "title": "Ordena las siguientes medidas de menor a mayor.",
+        "options": [
+            "Milímetro",
+            "Kilómetro",
+            "Metro",
+            "Centímetro"
+        ],
+        "answer": [
+            "Milímetro",
+            "Centímetro",
+            "Metro",
+            "Kilómetro"
+        ]
+    },
+    {
+        "id": "18",
+        "type": "order",
+        "tema": "Matemáticas",
+        "title": "Ordena los múltiplos de 5 de menor a mayor.",
+        "options": [
+            "10",
+            "25",
+            "5",
+            "15"
+        ],
+        "answer": [
+            "5",
+            "10",
+            "15",
+            "25"
+        ]
+    },
+    {
+        "id": "19",
+        "type": "order",
+        "tema": "Matemáticas",
+        "title": "Ordena las operaciones para resolver primero.",
+        "options": [
+            "Raíz cuadrada",
+            "Paréntesis",
+            "Multiplicación",
+            "Suma"
+        ],
+        "answer": [
+            "Paréntesis",
+            "Raíz cuadrada",
+            "Multiplicación",
+            "Suma"
+        ]
+    },
+    {
+        "id": "20",
+        "type": "order",
+        "tema": "Matemáticas",
+        "title": "Ordena estas unidades de tiempo de menor a mayor.",
+        "options": [
+            "Minuto",
+            "Segundo",
+            "Hora",
+            "Día"
+        ],
+        "answer": [
+            "Segundo",
+            "Minuto",
+            "Hora",
+            "Día"
+        ]
+    },
+    {
+        "id": "21",
         "type": "order",
         "tema": "Astronomía",
         "title": "Ordena los planetas desde el más cercano al sol.",
@@ -18,37 +378,345 @@
         ]
     },
     {
-        "id": "16",
+        "id": "22",
         "type": "order",
-        "tema": "Historia",
-        "title": "Ordena los siguientes eventos históricos: Descubrimiento de América, Revolución Francesa, Independencia de México.",
+        "tema": "Astronomía",
+        "title": "Ordena los cuerpos celestes por tamaño, del menor al mayor.",
         "options": [
-            "Independencia de México",
-            "Descubrimiento de América",
-            "Revolución Francesa"
+            "Planeta",
+            "Luna",
+            "Estrella",
+            "Asteroide"
         ],
         "answer": [
-            "Descubrimiento de América",
-            "Revolución Francesa",
-            "Independencia de México"
+            "Asteroide",
+            "Luna",
+            "Planeta",
+            "Estrella"
         ]
     },
     {
-        "id": "17",
+        "id": "23",
         "type": "order",
-        "tema": "Matemáticas",
-        "title": "Ordena los números de menor a mayor.",
+        "tema": "Astronomía",
+        "title": "Ordena las fases de la Luna desde la luna nueva.",
         "options": [
-            "15",
-            "3",
-            "8",
-            "1"
+            "Luna llena",
+            "Cuarto menguante",
+            "Cuarto creciente",
+            "Luna nueva"
         ],
         "answer": [
-            "1",
-            "3",
-            "8",
-            "15"
+            "Luna nueva",
+            "Cuarto creciente",
+            "Luna llena",
+            "Cuarto menguante"
+        ]
+    },
+    {
+        "id": "24",
+        "type": "order",
+        "tema": "Astronomía",
+        "title": "Ordena estos planetas del más lejano al más cercano al sol.",
+        "options": [
+            "Neptuno",
+            "Saturno",
+            "Júpiter",
+            "Urano"
+        ],
+        "answer": [
+            "Neptuno",
+            "Urano",
+            "Saturno",
+            "Júpiter"
+        ]
+    },
+    {
+        "id": "25",
+        "type": "order",
+        "tema": "Astronomía",
+        "title": "Ordena estas misiones espaciales según su fecha de lanzamiento.",
+        "options": [
+            "Apolo 11",
+            "Voyager 1",
+            "Sputnik 1",
+            "Curiosity"
+        ],
+        "answer": [
+            "Sputnik 1",
+            "Apolo 11",
+            "Voyager 1",
+            "Curiosity"
+        ]
+    },
+    {
+        "id": "26",
+        "type": "order",
+        "tema": "Astronomía",
+        "title": "Ordena los movimientos de la Tierra según su duración.",
+        "options": [
+            "Rotación",
+            "Precesión",
+            "Traslación",
+            "Nutación"
+        ],
+        "answer": [
+            "Rotación",
+            "Traslación",
+            "Nutación",
+            "Precesión"
+        ]
+    },
+    {
+        "id": "27",
+        "type": "order",
+        "tema": "Astronomía",
+        "title": "Ordena estas capas del Sol desde el centro hacia afuera.",
+        "options": [
+            "Fotosfera",
+            "Cromosfera",
+            "Núcleo",
+            "Corona"
+        ],
+        "answer": [
+            "Núcleo",
+            "Fotosfera",
+            "Cromosfera",
+            "Corona"
+        ]
+    },
+    {
+        "id": "28",
+        "type": "order",
+        "tema": "Astronomía",
+        "title": "Ordena los tipos de estrellas por su temperatura de menor a mayor.",
+        "options": [
+            "Estrella roja",
+            "Estrella blanca",
+            "Estrella azul",
+            "Estrella amarilla"
+        ],
+        "answer": [
+            "Estrella roja",
+            "Estrella amarilla",
+            "Estrella blanca",
+            "Estrella azul"
+        ]
+    },
+    {
+        "id": "29",
+        "type": "order",
+        "tema": "Astronomía",
+        "title": "Ordena las siguientes galaxias según su cercanía a la Vía Láctea.",
+        "options": [
+            "Andrómeda",
+            "Gran Nube de Magallanes",
+            "Pequeña Nube de Magallanes",
+            "Triángulo"
+        ],
+        "answer": [
+            "Gran Nube de Magallanes",
+            "Pequeña Nube de Magallanes",
+            "Triángulo",
+            "Andrómeda"
+        ]
+    },
+    {
+        "id": "30",
+        "type": "order",
+        "tema": "Astronomía",
+        "title": "Ordena las estaciones del año en el hemisferio norte.",
+        "options": [
+            "Primavera",
+            "Invierno",
+            "Verano",
+            "Otoño"
+        ],
+        "answer": [
+            "Invierno",
+            "Primavera",
+            "Verano",
+            "Otoño"
+        ]
+    },
+    {
+        "id": "31",
+        "type": "order",
+        "tema": "Cultura General",
+        "title": "Ordena estos países de menor a mayor extensión territorial.",
+        "options": [
+            "México",
+            "Rusia",
+            "Canadá",
+            "Brasil"
+        ],
+        "answer": [
+            "México",
+            "Brasil",
+            "Canadá",
+            "Rusia"
+        ]
+    },
+    {
+        "id": "32",
+        "type": "order",
+        "tema": "Cultura General",
+        "title": "Ordena estos idiomas según el número de hablantes nativos.",
+        "options": [
+            "Chino mandarín",
+            "Español",
+            "Árabe",
+            "Inglés"
+        ],
+        "answer": [
+            "Chino mandarín",
+            "Español",
+            "Inglés",
+            "Árabe"
+        ]
+    },
+    {
+        "id": "33",
+        "type": "order",
+        "tema": "Cultura General",
+        "title": "Ordena los colores del arcoíris desde arriba.",
+        "options": [
+            "Verde",
+            "Rojo",
+            "Azul",
+            "Amarillo"
+        ],
+        "answer": [
+            "Rojo",
+            "Amarillo",
+            "Verde",
+            "Azul"
+        ]
+    },
+    {
+        "id": "34",
+        "type": "order",
+        "tema": "Cultura General",
+        "title": "Ordena estas celebraciones por su mes en México.",
+        "options": [
+            "Día de Muertos",
+            "Navidad",
+            "Día de la Independencia",
+            "Día del Niño"
+        ],
+        "answer": [
+            "Día del Niño",
+            "Día de la Independencia",
+            "Día de Muertos",
+            "Navidad"
+        ]
+    },
+    {
+        "id": "35",
+        "type": "order",
+        "tema": "Cultura General",
+        "title": "Ordena estos inventos por su aparición histórica.",
+        "options": [
+            "Teléfono",
+            "Internet",
+            "Imprenta",
+            "Electricidad"
+        ],
+        "answer": [
+            "Imprenta",
+            "Electricidad",
+            "Teléfono",
+            "Internet"
+        ]
+    },
+    {
+        "id": "36",
+        "type": "order",
+        "tema": "Cultura General",
+        "title": "Ordena estas comidas típicas según su país de origen.",
+        "options": [
+            "Pizza",
+            "Tacos",
+            "Sushi",
+            "Croissant"
+        ],
+        "answer": [
+            "Tacos",
+            "Pizza",
+            "Croissant",
+            "Sushi"
+        ]
+    },
+    {
+        "id": "37",
+        "type": "order",
+        "tema": "Cultura General",
+        "title": "Ordena estas monedas del mundo por su país.",
+        "options": [
+            "Euro",
+            "Yen",
+            "Peso",
+            "Dólar"
+        ],
+        "answer": [
+            "Peso",
+            "Dólar",
+            "Euro",
+            "Yen"
+        ]
+    },
+    {
+        "id": "38",
+        "type": "order",
+        "tema": "Cultura General",
+        "title": "Ordena estos continentes por su población.",
+        "options": [
+            "África",
+            "Asia",
+            "América",
+            "Europa"
+        ],
+        "answer": [
+            "Asia",
+            "África",
+            "Europa",
+            "América"
+        ]
+    },
+    {
+        "id": "39",
+        "type": "order",
+        "tema": "Cultura General",
+        "title": "Ordena estas redes sociales por año de creación.",
+        "options": [
+            "TikTok",
+            "Instagram",
+            "Facebook",
+            "Twitter"
+        ],
+        "answer": [
+            "Facebook",
+            "Twitter",
+            "Instagram",
+            "TikTok"
+        ]
+    },
+    {
+        "id": "40",
+        "type": "order",
+        "tema": "Cultura General",
+        "title": "Ordena estos deportes según su aparición histórica.",
+        "options": [
+            "Béisbol",
+            "Tenis",
+            "Fútbol",
+            "Baloncesto"
+        ],
+        "answer": [
+            "Tenis",
+            "Fútbol",
+            "Béisbol",
+            "Baloncesto"
         ]
     }
 ]

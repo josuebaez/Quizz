@@ -8,8 +8,8 @@ class TemasScreen extends StatelessWidget {
   // Puedes personalizar los temas por tipo si lo deseas
   final Map<String, List<String>> temasPorTipo = const {
     'true_false': ['Historia', 'Matemáticas', 'Astronomía', 'Cultura general'],
-    'short': ['Literatura', 'Ciencia', 'Arte', 'Deportes'],
-    'order': ['Astronomía', 'Historia', 'Ciencia', 'Tecnología'],
+    'short': ['Historia', 'Matemáticas', 'Astronomía', 'Cultura general'],
+    'order': ['Historia', 'Matematicas', 'Astronomía', 'Cultura general'],
   };
 
   final Map<String, List<Color>> coloresPorTipo = const {
