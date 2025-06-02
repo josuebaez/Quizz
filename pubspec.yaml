@@ -46,8 +46,9 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_launcher_icons: ^0.14.3
+  flutter_launcher_icons: ^0.14.3 
   flutter_lints: ^5.0.0
+  #shared_preferences: ^2.2.0
 
 # Corrección: cambia "flutter_icons:" a "flutter_launcher_icons:" y corrige la indentación
 flutter_launcher_icons:
