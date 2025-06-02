@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constants.dart';
@@ -12,7 +11,6 @@ import '../models/api_service.dart'; // Importar el servicio de API
 import 'dart:async';
 
 import '../models/local_question_loader.dart';
-import 'progress_screen.dart';
 
 //Se modifico este archivo solo para agregar un LogOut
 
@@ -54,6 +52,24 @@ class HomeScreenState extends State<HomeScreen> {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         _seconds++;
+        if (_seconds >= 60) {
+          _timer.cancel();
+          _questions.then((questions) {
+            if (mounted) {
+              _saveProgress(); // Guardar progreso al terminar
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (ctx) => ResultBox(
+                  result: score,
+                  questionLeght: questions.length,
+                  onPressed: startOver,
+                  completionTime: timerText,
+                ),
+              );
+            }
+          });
+        }
       });
     });
   }

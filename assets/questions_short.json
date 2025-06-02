@@ -1,93 +1,282 @@
 [
     {
-        "id": "3",
-        "type": "short",
-        "tema": "Literatura",
-        "title": "¿Quién escribió 'Cien años de soledad'?",
-        "answer": "Gabriel García Márquez"
-    },
-    {
         "id": "1",
         "type": "short",
-        "tema": "Literatura",
-        "title": "¿Quién escribió 'Don Quijote de la Mancha'?",
-        "answer": "Miguel de Cervantes"
+        "tema": "Historia",
+        "title": "¿En qué año llegó Cristóbal Colón a América?",
+        "answer": "1492"
     },
     {
         "id": "2",
         "type": "short",
-        "tema": "Literatura",
-        "title": "¿Qué autor escribió 'La Odisea'?",
-        "answer": "Homero"
+        "tema": "Historia",
+        "title": "¿Quién fue el primer presidente de Estados Unidos?",
+        "answer": "George Washington"
     },
     {
         "id": "3",
         "type": "short",
-        "tema": "Literatura",
-        "title": "¿Quién escribió 'Cien años de soledad'?",
-        "answer": "Gabriel García Márquez"
+        "tema": "Historia",
+        "title": "¿Qué civilización construyó las pirámides de Egipto?",
+        "answer": "Egipcia"
     },
     {
         "id": "4",
         "type": "short",
-        "tema": "Literatura",
-        "title": "¿Quién es el autor de 'Romeo y Julieta'?",
-        "answer": "William Shakespeare"
+        "tema": "Historia",
+        "title": "¿En qué año terminó la Segunda Guerra Mundial?",
+        "answer": "1945"
     },
     {
         "id": "5",
         "type": "short",
-        "tema": "Literatura",
-        "title": "¿Qué escritor chileno ganó el Premio Nobel en 1945?",
-        "answer": "Gabriela Mistral"
+        "tema": "Historia",
+        "title": "¿Quién fue el líder del movimiento de independencia en India?",
+        "answer": "Mahatma Gandhi"
     },
     {
         "id": "6",
         "type": "short",
-        "tema": "Literatura",
-        "title": "¿Qué obra famosa comienza con 'En un lugar de la Mancha...’?",
-        "answer": "Don Quijote de la Mancha"
+        "tema": "Historia",
+        "title": "¿Quién escribió el Manifiesto Comunista junto con Marx?",
+        "answer": "Friedrich Engels"
     },
     {
         "id": "7",
         "type": "short",
-        "tema": "Literatura",
-        "title": "¿Quién escribió 'La metamorfosis'?",
-        "answer": "Franz Kafka"
+        "tema": "Historia",
+        "title": "¿Qué país lanzó la bomba atómica sobre Hiroshima?",
+        "answer": "Estados Unidos"
     },
     {
         "id": "8",
         "type": "short",
-        "tema": "Literatura",
-        "title": "¿Qué autor argentino escribió 'Ficciones'?",
-        "answer": "Jorge Luis Borges"
+        "tema": "Historia",
+        "title": "¿Qué guerra se libró entre 1914 y 1918?",
+        "answer": "Primera Guerra Mundial"
     },
     {
         "id": "9",
         "type": "short",
-        "tema": "Literatura",
-        "title": "¿Quién escribió 'Pedro Páramo'?",
-        "answer": "Juan Rulfo"
+        "tema": "Historia",
+        "title": "¿En qué país comenzó la Revolución Industrial?",
+        "answer": "Inglaterra"
     },
     {
         "id": "10",
         "type": "short",
-        "tema": "Literatura",
-        "title": "¿Quién es el autor de 'Crimen y castigo'?",
-        "answer": "Fiódor Dostoyevski"
+        "tema": "Historia",
+        "title": "¿Quién lideró la conquista de México en 1521?",
+        "answer": "Hernán Cortés"
+    },
+    {
+        "id": "11",
+        "type": "short",
+        "tema": "Matemáticas",
+        "title": "¿Cuánto es 9 x 8?",
+        "answer": "72"
+    },
+    {
+        "id": "12",
+        "type": "short",
+        "tema": "Matemáticas",
+        "title": "¿Qué nombre recibe un polígono de seis lados?",
+        "answer": "Hexágono"
+    },
+    {
+        "id": "13",
+        "type": "short",
+        "tema": "Matemáticas",
+        "title": "¿Qué número sigue en la serie: 2, 4, 8, 16, ...?",
+        "answer": "32"
     },
     {
         "id": "14",
         "type": "short",
-        "tema": "Astronomía",
-        "title": "¿En qué año llegó el hombre a la Luna?",
-        "answer": "1969"
+        "tema": "Matemáticas",
+        "title": "¿Cuál es el resultado de 100 dividido entre 4?",
+        "answer": "25"
     },
     {
         "id": "15",
         "type": "short",
         "tema": "Matemáticas",
-        "title": "¿Cuál es el resultado de 7 x 8?",
-        "answer": "56"
+        "title": "¿Cómo se llama el número que no tiene inverso multiplicativo?",
+        "answer": "Cero"
+    },
+    {
+        "id": "16",
+        "type": "short",
+        "tema": "Matemáticas",
+        "title": "¿Cuánto es la raíz cuadrada de 121?",
+        "answer": "11"
+    },
+    {
+        "id": "17",
+        "type": "short",
+        "tema": "Matemáticas",
+        "title": "¿Cuál es el valor de pi con dos decimales?",
+        "answer": "3.14"
+    },
+    {
+        "id": "18",
+        "type": "short",
+        "tema": "Matemáticas",
+        "title": "¿Qué operación inversa corresponde a la multiplicación?",
+        "answer": "División"
+    },
+    {
+        "id": "19",
+        "type": "short",
+        "tema": "Matemáticas",
+        "title": "¿Qué tipo de ángulo mide 90 grados?",
+        "answer": "Recto"
+    },
+    {
+        "id": "20",
+        "type": "short",
+        "tema": "Matemáticas",
+        "title": "¿Qué nombre recibe un número que solo tiene dos divisores?",
+        "answer": "Primo"
+    },
+    {
+        "id": "21",
+        "type": "short",
+        "tema": "Astronomía",
+        "title": "¿Cuál es el planeta más cercano al Sol?",
+        "answer": "Mercurio"
+    },
+    {
+        "id": "22",
+        "type": "short",
+        "tema": "Astronomía",
+        "title": "¿Qué estrella es el centro del sistema solar?",
+        "answer": "El Sol"
+    },
+    {
+        "id": "23",
+        "type": "short",
+        "tema": "Astronomía",
+        "title": "¿Qué planeta tiene un sistema de anillos visible?",
+        "answer": "Saturno"
+    },
+    {
+        "id": "24",
+        "type": "short",
+        "tema": "Astronomía",
+        "title": "¿Cómo se llama nuestra galaxia?",
+        "answer": "Vía Láctea"
+    },
+    {
+        "id": "25",
+        "type": "short",
+        "tema": "Astronomía",
+        "title": "¿Cuál es el planeta rojo?",
+        "answer": "Marte"
+    },
+    {
+        "id": "26",
+        "type": "short",
+        "tema": "Astronomía",
+        "title": "¿Qué satélite natural tiene la Tierra?",
+        "answer": "La Luna"
+    },
+    {
+        "id": "27",
+        "type": "short",
+        "tema": "Astronomía",
+        "title": "¿Cuál es el planeta más grande del sistema solar?",
+        "answer": "Júpiter"
+    },
+    {
+        "id": "28",
+        "type": "short",
+        "tema": "Astronomía",
+        "title": "¿Qué planeta tarda más en dar la vuelta al Sol?",
+        "answer": "Neptuno"
+    },
+    {
+        "id": "29",
+        "type": "short",
+        "tema": "Astronomía",
+        "title": "¿Qué planeta fue considerado el noveno hasta 2006?",
+        "answer": "Plutón"
+    },
+    {
+        "id": "30",
+        "type": "short",
+        "tema": "Astronomía",
+        "title": "¿Cómo se llama el telescopio espacial lanzado en 1990?",
+        "answer": "Hubble"
+    },
+    {
+        "id": "31",
+        "type": "short",
+        "tema": "Cultura General",
+        "title": "¿Cuál es el idioma oficial de Brasil?",
+        "answer": "Portugués"
+    },
+    {
+        "id": "32",
+        "type": "short",
+        "tema": "Cultura General",
+        "title": "¿En qué país se encuentra la Torre Eiffel?",
+        "answer": "Francia"
+    },
+    {
+        "id": "33",
+        "type": "short",
+        "tema": "Cultura General",
+        "title": "¿Qué instrumento musical tiene teclas blancas y negras?",
+        "answer": "Piano"
+    },
+    {
+        "id": "34",
+        "type": "short",
+        "tema": "Cultura General",
+        "title": "¿Cómo se llama el océano más grande del mundo?",
+        "answer": "Pacífico"
+    },
+    {
+        "id": "35",
+        "type": "short",
+        "tema": "Cultura General",
+        "title": "¿Cuál es la moneda oficial de Japón?",
+        "answer": "Yen"
+    },
+    {
+        "id": "36",
+        "type": "short",
+        "tema": "Cultura General",
+        "title": "¿Qué día se celebra el Día de la Tierra?",
+        "answer": "22 de abril"
+    },
+    {
+        "id": "37",
+        "type": "short",
+        "tema": "Cultura General",
+        "title": "¿Qué deporte practica Lionel Messi?",
+        "answer": "Fútbol"
+    },
+    {
+        "id": "38",
+        "type": "short",
+        "tema": "Cultura General",
+        "title": "¿Qué color se obtiene al mezclar azul y amarillo?",
+        "answer": "Verde"
+    },
+    {
+        "id": "39",
+        "type": "short",
+        "tema": "Cultura General",
+        "title": "¿En qué continente se encuentra Egipto?",
+        "answer": "África"
+    },
+    {
+        "id": "40",
+        "type": "short",
+        "tema": "Cultura General",
+        "title": "¿Qué animal es conocido como el rey de la selva?",
+        "answer": "León"
     }
 ]
