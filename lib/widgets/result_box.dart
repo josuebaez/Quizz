@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../constants.dart';
+import '../pages/niveles.dart';
 
 class ResultBox extends StatelessWidget {
   const ResultBox({
@@ -79,6 +80,35 @@ class ResultBox extends StatelessWidget {
                     'Iniciar de nuevo',
                     style: TextStyle(
                       color: Colors.lightGreenAccent,
+                      fontSize: 15.0,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 15.0),
+            // Nuevo botón para volver a niveles
+            GestureDetector(
+              onTap: () => Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => const Niveles()),
+                (route) => false,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.home,
+                    color: Colors.white,
+                    size: 18.0,
+                  ),
+                  SizedBox(width: 8.0),
+                  Text(
+                    'Menu de Preguntas',
+                    style: TextStyle(
+                      color: Colors.white,
                       fontSize: 15.0,
                       letterSpacing: 0.5,
                     ),

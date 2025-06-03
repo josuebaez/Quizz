@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gif/gif.dart'; // Biblioteca correcta para GIFs
-//import 'package:app_quiz/screens/login.dart';
+import 'package:prueba_app/screens/login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:prueba_app/screens/home_screen.dart';
 import 'niveles_api.dart';
@@ -45,13 +45,21 @@ class _NivelesState extends State<Niveles> with TickerProviderStateMixin {
 
   // Método para cerrar sesión
   void cerrarSesion() {
-    FirebaseAuth.instance.signOut().catchError((error) {
-      // Manejar errores si ocurren al cerrar sesión
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error al cerrar sesión: ${error.toString()}')),
-      );
-    });
-  }
+  FirebaseAuth.instance.signOut().then((_) {
+    // Primero navegar al login después de cerrar sesión exitosamente
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => LogIN_Screen(() {}), // Pasamos una función vacía como show
+      ),
+    );
+  }).catchError((error) {
+    // Manejar errores si ocurren al cerrar sesión
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Error al cerrar sesión: ${error.toString()}')),
+    );
+  });
+}
 
   //Navegar a la pantalla de quiz
   void navegarAQuiz(String difficulty) {

@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'question_model.dart';
+import 'dart:math';
 
+//Igual, formato de preguntas random
 class LocalQuestionLoader {
   Future<List<Question>> loadQuestionsByType(String tipo) async {
     String assetPath;
@@ -18,13 +20,13 @@ class LocalQuestionLoader {
       default:
         assetPath = 'assets/questions.json';
     }
-    final String response = await rootBundle.loadString(assetPath);
-    final List<dynamic> data = json.decode(response);
-    return data.map((json) => Question.fromJson(json)).toList();
+    
+    final String jsonString = await rootBundle.loadString(assetPath);
+    final List<dynamic> jsonList = json.decode(jsonString);
+    return jsonList.map((json) => Question.fromJson(json)).toList();
   }
 
   String _normalize(String s) {
-    // Quita acentos y pasa a minúsculas
     return s
         .toLowerCase()
         .replaceAll(RegExp(r'[áàäâ]'), 'a')
@@ -41,13 +43,18 @@ class LocalQuestionLoader {
   ) async {
     final all = await loadQuestionsByType(tipo);
     final temaNorm = _normalize(tema);
-    return all.where((q) {
+    
+    var filteredQuestions = all.where((q) {
       if (q.type != tipo) return false;
       if (q.tema == null) return false;
       final preguntaTemaNorm = _normalize(q.tema!);
-      // Coincidencia parcial: si el tema buscado está contenido en el tema de la pregunta o viceversa
       return preguntaTemaNorm.contains(temaNorm) ||
           temaNorm.contains(preguntaTemaNorm);
     }).toList();
+
+    // Mezclar aleatoriamente las preguntas
+    filteredQuestions.shuffle(Random());
+    
+    return filteredQuestions;
   }
 }

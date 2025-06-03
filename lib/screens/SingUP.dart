@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:prueba_app/const/colors.dart';
 import 'package:prueba_app/data/auth_data.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:math' as math;
 
 class SignUp_Screen extends StatefulWidget {
   final VoidCallback show;
@@ -11,7 +12,8 @@ class SignUp_Screen extends StatefulWidget {
   State<SignUp_Screen> createState() => _SignUp_ScreenState();
 }
 
-class _SignUp_ScreenState extends State<SignUp_Screen> {
+class _SignUp_ScreenState extends State<SignUp_Screen>
+    with TickerProviderStateMixin {
   final FocusNode _focusNode1 = FocusNode();
   final FocusNode _focusNode2 = FocusNode();
   final FocusNode _focusNode3 = FocusNode();
@@ -22,19 +24,87 @@ class _SignUp_ScreenState extends State<SignUp_Screen> {
   
   bool isLoading = false;
   String? errorMessage;
+  bool _isMounted = true;
+  
+  // Controladores de animación para las gotas
+  late AnimationController _animationController;
+  late List<AnimationController> _dropControllers;
+  late List<Animation<double>> _dropAnimations;
+  late List<Offset> _dropPositions;
+  late List<Color> _dropColors;
  
   @override
   void initState() {
     super.initState();
     _focusNode1.addListener(() {
-      setState(() {});
+      if (_isMounted) setState(() {});
     });
     _focusNode2.addListener(() {
-      setState(() {});
+      if (_isMounted) setState(() {});
     });
     _focusNode3.addListener(() {
-      setState(() {});
+      if (_isMounted) setState(() {});
     });
+    
+    // Inicializar animaciones
+    _initializeAnimations();
+  }
+
+  void _initializeAnimations() {
+    _animationController = AnimationController(
+      duration: Duration(seconds: 3),
+      vsync: this,
+    );
+
+    // Crear múltiples gotas
+    _dropControllers = [];
+    _dropAnimations = [];
+    _dropPositions = [];
+    _dropColors = [];
+    
+    final random = math.Random();
+    
+    // Colores para las gotas (azul claro y guinda claro)
+    final colors = [
+      Color.fromARGB(255, 80, 200, 248), 
+      Color.fromARGB(255, 223, 95, 138), 
+      Color.fromARGB(255, 63, 182, 230), 
+      Color.fromARGB(255, 245, 90, 134), 
+    ];
+
+    for (int i = 0; i < 25; i++) { // 25 gotas para cobertura completa
+      final controller = AnimationController(
+        duration: Duration(milliseconds: 1500 + random.nextInt(4000)),
+        vsync: this,
+      );
+      
+      final animation = Tween<double>(
+        begin: -100,
+        end: 1200,
+      ).animate(CurvedAnimation(
+        parent: controller,
+        curve: Curves.easeInOut,
+      ));
+      
+      _dropControllers.add(controller);
+      _dropAnimations.add(animation);
+      
+      // Posiciones aleatorias para las gotas cubriendo toda la pantalla
+      _dropPositions.add(Offset(
+        random.nextDouble() * 500,
+        random.nextDouble() * 800,
+      ));
+      
+      // Colores aleatorios
+      _dropColors.add(colors[random.nextInt(colors.length)]);
+      
+      // Iniciar animación con delay aleatorio
+      Future.delayed(Duration(milliseconds: random.nextInt(2000)), () {
+        if (_isMounted) {
+          controller.repeat();
+        }
+      });
+    }
   }
 
   // Función para validar el formato de email
@@ -87,7 +157,9 @@ class _SignUp_ScreenState extends State<SignUp_Screen> {
       
       // Si llegamos aquí, el registro fue exitoso
       // Navegar a la pantalla de preguntas
-      Navigator.pushReplacementNamed(context, '/preguntas');
+      if (_isMounted) {
+        Navigator.pushReplacementNamed(context, '/preguntas');
+      }
       
     } on FirebaseAuthException catch (e) {
       // Manejar errores específicos de Firebase
@@ -105,63 +177,90 @@ class _SignUp_ScreenState extends State<SignUp_Screen> {
         default:
           message = 'Error al registrar usuario: ${e.message}';
       }
-      setState(() {
-        errorMessage = message;
-      });
+      if (_isMounted) {
+        setState(() {
+          errorMessage = message;
+        });
+      }
     } catch (e) {
-      setState(() {
-        errorMessage = 'Ocurrió un error inesperado';
-      });
+      if (_isMounted) {
+        setState(() {
+          errorMessage = 'Ocurrió un error inesperado';
+        });
+      }
     } finally {
-      setState(() {
-        isLoading = false;
-      });
+      if (_isMounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     }
   }
   
   @override
   Widget build(BuildContext context){
     return Scaffold(
-      backgroundColor: Color(0xFF8B1E41),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(height: 20),
-              image(),
-              SizedBox(height: 50),
-              textfield(email, _focusNode1, 'Correo', Icons.email),
-              SizedBox(height: 10),
-              textfield(password, _focusNode2, 'Contraseña', Icons.password, isPassword: true),
-              SizedBox(height: 10),
-              textfield(PasswordConfirm, _focusNode3, 'Confirmar contraseña', Icons.password, isPassword: true),
-              SizedBox(height: 10),
-              
-              // Mostrar mensaje de error si existe
-              if (errorMessage != null)
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: Container(
-                    width: double.infinity,
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: Colors.red.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(10),
+      backgroundColor: const Color.fromARGB(255, 123, 182, 177),
+      body: Stack(
+        children: [
+          // Fondo con animación de gotas
+          AnimatedBackground(),
+          
+          // Contenido principal
+          SafeArea(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(height: 20),
+                  image(),
+                  SizedBox(height: 50),
+                  textfield(email, _focusNode1, 'Correo', Icons.email),
+                  SizedBox(height: 10),
+                  textfield(password, _focusNode2, 'Contraseña', Icons.password, isPassword: true),
+                  SizedBox(height: 10),
+                  textfield(PasswordConfirm, _focusNode3, 'Confirmar contraseña', Icons.password, isPassword: true),
+                  SizedBox(height: 10),
+                  
+                  // Mostrar mensaje de error si existe
+                  if (errorMessage != null)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Colors.red.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Text(
+                          errorMessage!,
+                          style: TextStyle(color: Colors.white),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
                     ),
-                    child: Text(
-                      errorMessage!,
-                      style: TextStyle(color: Colors.white),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-              
-              SizedBox(height: 10),
-              account(),
-              SizedBox(height: 20),
-              SignUP_bottom(),
-            ],
+                  
+                  SizedBox(height: 10),
+                  account(),
+                  SizedBox(height: 20),
+                  SignUP_bottom(),
+                ],
+              ),
+            ),
           ),
+        ],
+      ),
+    );
+  }
+
+  // Widget para el fondo animado
+  Widget AnimatedBackground() {
+    return Positioned.fill(
+      child: CustomPaint(
+        painter: DropsPainter(
+          animations: _dropAnimations,
+          positions: _dropPositions,
+          colors: _dropColors,
         ),
       ),
     );
@@ -272,9 +371,24 @@ class _SignUp_ScreenState extends State<SignUp_Screen> {
       width: double.infinity,
       height: 300,
       decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage('images/1.jpg'),
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(15),
+        child: Image.asset(
+          'icon/Quiz.png', // Mantiene la imagen estática como solicitaste
           fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            // Widget de respaldo si no se encuentra la imagen
+            return Container(
+              color: Colors.grey[300],
+              child: Icon(
+                Icons.image_not_supported,
+                size: 50,
+                color: Colors.grey[600],
+              ),
+            );
+          },
         ),
       ),
     );
@@ -282,12 +396,103 @@ class _SignUp_ScreenState extends State<SignUp_Screen> {
 
   @override
   void dispose() {
+    _isMounted = false;
+    
     email.dispose();
     password.dispose();
     PasswordConfirm.dispose();
     _focusNode1.dispose();
     _focusNode2.dispose();
     _focusNode3.dispose();
+    
+    // Disponer animaciones
+    _animationController.dispose();
+    for (var controller in _dropControllers) {
+      controller.dispose();
+    }
+    
     super.dispose();
   }
+}
+
+// Painter personalizado para dibujar las gotas animadas
+class DropsPainter extends CustomPainter {
+  final List<Animation<double>> animations;
+  final List<Offset> positions;
+  final List<Color> colors;
+
+  DropsPainter({
+    required this.animations,
+    required this.positions,
+    required this.colors,
+  }) : super(repaint: Listenable.merge(animations));
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    for (int i = 0; i < animations.length; i++) {
+      final paint = Paint()
+        ..color = colors[i].withOpacity(0.4)
+        ..style = PaintingStyle.fill;
+
+      // Crear forma de gota que se adapta al tamaño de pantalla
+      final center = Offset(
+        (positions[i].dx * size.width / 500).clamp(0.0, size.width),
+        animations[i].value % (size.height + 200),
+      );
+      
+      // Dibujar gota como una elipse con cola
+      final dropSize = 6.0 + (i % 4) * 3.0;
+      
+      // Cuerpo principal de la gota (círculo)
+      canvas.drawCircle(center, dropSize, paint);
+      
+      // Cola de la gota
+      final tailPath = Path();
+      tailPath.moveTo(center.dx, center.dy - dropSize);
+      tailPath.quadraticBezierTo(
+        center.dx - dropSize * 0.4,
+        center.dy - dropSize * 2.0,
+        center.dx,
+        center.dy - dropSize * 2.5,
+      );
+      tailPath.quadraticBezierTo(
+        center.dx + dropSize * 0.4,
+        center.dy - dropSize * 2.0,
+        center.dx,
+        center.dy - dropSize,
+      );
+      
+      canvas.drawPath(tailPath, paint);
+      
+      // Agregar brillo a la gota
+      final highlightPaint = Paint()
+        ..color = Colors.white.withOpacity(0.3)
+        ..style = PaintingStyle.fill;
+      
+      canvas.drawCircle(
+        Offset(center.dx - dropSize * 0.3, center.dy - dropSize * 0.3),
+        dropSize * 0.25,
+        highlightPaint,
+      );
+      
+      // Agregar gotas más pequeñas como salpicaduras ocasionales
+      if (i % 3 == 0) {
+        final splashPaint = Paint()
+          ..color = colors[i].withOpacity(0.2)
+          ..style = PaintingStyle.fill;
+          
+        // Pequeñas gotas alrededor
+        for (int j = 0; j < 3; j++) {
+          final splashOffset = Offset(
+            center.dx + (j - 1) * dropSize * 1.5,
+            center.dy + dropSize * 0.8,
+          );
+          canvas.drawCircle(splashOffset, dropSize * 0.3, splashPaint);
+        }
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }

@@ -30,18 +30,49 @@ class Question {
   factory Question.fromJson(Map<String, dynamic> json) {
     final type = json['type'] ?? 'multiple';
     final tema = json['tema'] as String?;
+
     if (type == 'true_false') {
+      // Para preguntas verdadero/falso, mezclar aleatoriamente el orden
+      var options = {
+        'Verdadero': json['answer'] == true,
+        'Falso': json['answer'] == false,
+      };
+      var entries = options.entries.toList()..shuffle(Random());
       return Question(
         id: json['id'],
         title: json['title'],
         tema: tema,
-        options: {
-          'Verdadero': json['answer'] == true,
-          'Falso': json['answer'] == false,
-        },
+        options: Map.fromEntries(entries),
         type: type,
       );
-    } else if (type == 'short') {
+    } else if (type == 'multiple') {
+      // Para preguntas de opción múltiple
+      var options = Map<String, bool>.from(json['options']);
+      var entries = options.entries.toList()..shuffle(Random());
+      return Question(
+        id: json['id'],
+        title: json['title'],
+        tema: tema,
+        options: Map.fromEntries(entries),
+        type: type,
+      );
+    } else if (type == 'order') {
+      var originalOptions = List<String>.from(json['options']);
+      var originalAnswer = List<String>.from(json['answer']);
+      
+      var shuffledOptions = List<String>.from(originalOptions);
+      shuffledOptions.shuffle(Random());
+      
+      return Question(
+        id: json['id'],
+        title: json['title'],
+        tema: tema,
+        orderOptions: shuffledOptions, // Lista mezclada independiente
+        correctOrder: originalAnswer,   // Lista correcta independiente
+        type: type,
+      );
+    } else {
+      // Para preguntas de respuesta corta
       return Question(
         id: json['id'],
         title: json['title'],
@@ -49,51 +80,38 @@ class Question {
         answer: json['answer'],
         type: type,
       );
-    } else if (type == 'order') {
-      return Question(
-        id: json['id'],
-        title: json['title'],
-        tema: tema,
-        orderOptions: List<String>.from(json['options']),
-        correctOrder: List<String>.from(json['answer']),
-        type: type,
-      );
-    } else {
-      // Opción múltiple por defecto
-      return Question(
-        id: json['id'],
-        title: json['title'],
-        tema: tema,
-        options: Map<String, bool>.from(json['options']),
-        type: type,
-      );
     }
   }
 
   // Método para convertir la respuesta de la API en un objeto Question
+  // Cambio de formato, soluciones se generan de forma random
   factory Question.fromApiJson(Map<String, dynamic> json) {
-    String questionText = json['question'];
-    questionText = _decodeHtmlEntities(questionText);
-    String correctAnswer = _decodeHtmlEntities(json['correct_answer']);
-    List<String> incorrectAnswers =
-        (json['incorrect_answers'] as List)
-            .map((answer) => _decodeHtmlEntities(answer.toString()))
-            .toList();
-    Map<String, bool> options = {};
-    options[correctAnswer] = true;
-    for (String answer in incorrectAnswers) {
-      options[answer] = false;
+    String questionText = _decodeHtmlEntities(json['question']);
+    
+    List<String> allOptions = [
+      ...json['incorrect_answers'].map((e) => _decodeHtmlEntities(e.toString())),
+      _decodeHtmlEntities(json['correct_answer'])
+    ];
+
+    // Mezclar las opciones aleatoriamente
+    allOptions.shuffle(Random());
+
+    // Crear el mapa de opciones donde guardamos cuál es correcta
+    Map<String, bool> optionsMap = {};
+    for (String option in allOptions) {
+      // Comparamos cada opción con la respuesta correcta
+      optionsMap[option] = (option == _decodeHtmlEntities(json['correct_answer']));
     }
-    String id =
-        DateTime.now().millisecondsSinceEpoch.toString() +
-        Random().nextInt(10000).toString();
+
     return Question(
-      id: id,
+      id: DateTime.now().millisecondsSinceEpoch.toString(), // ID único
       title: questionText,
-      options: options,
+      options: optionsMap,
+      answer: _decodeHtmlEntities(json['correct_answer']),
       type: 'multiple',
     );
   }
+
   static String _decodeHtmlEntities(String text) {
     return text
         .replaceAll('&quot;', '"')
