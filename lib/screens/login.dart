@@ -13,91 +13,25 @@ class LogIN_Screen extends StatefulWidget {
   State<LogIN_Screen> createState() => _LogIN_ScreenState();
 }
 
-class _LogIN_ScreenState extends State<LogIN_Screen>
-    with TickerProviderStateMixin {
+class _LogIN_ScreenState extends State<LogIN_Screen> {
   final FocusNode _focusNode1 = FocusNode();
   final FocusNode _focusNode2 = FocusNode();
 
   final email = TextEditingController();
   final password = TextEditingController();
   
-  bool isLoading = false;
-  String? errorMessage;
-  bool _isMounted = true;
-  
-  // Controladores de animación para las gotas
-  late AnimationController _animationController;
-  late List<AnimationController> _dropControllers;
-  late List<Animation<double>> _dropAnimations;
-  late List<Offset> _dropPositions;
-  late List<Color> _dropColors;
-  
+  bool isLoading = false; // Para mostrar indicador de carga
+  String? errorMessage; // Para mostrar mensajes de error
+  bool _isMounted = true; // Flag para verificar si el widget está montado
+ 
   @override
   void initState() {
     super.initState();
     _focusNode1.addListener(_handleFocus1Change);
     _focusNode2.addListener(_handleFocus2Change);
-    
-    // Inicializar animaciones
-    _initializeAnimations();
   }
 
-  void _initializeAnimations() {
-    _animationController = AnimationController(
-      duration: Duration(seconds: 3),
-      vsync: this,
-    );
-
-    // Crear múltiples gotas
-    _dropControllers = [];
-    _dropAnimations = [];
-    _dropPositions = [];
-    _dropColors = [];
-    
-    final random = math.Random();
-    
-    // Colores para las gotas 
-    final colors = [
-      Color.fromARGB(255, 80, 200, 248), 
-      Color.fromARGB(255, 223, 95, 138), 
-      Color.fromARGB(255, 63, 182, 230), 
-      Color.fromARGB(255, 245, 90, 134), 
-    ];
-
-    for (int i = 0; i < 25; i++) { // Aumentado de 15 a 25 gotas
-      final controller = AnimationController(
-        duration: Duration(milliseconds: 1500 + random.nextInt(4000)), // Más variación en velocidad
-        vsync: this,
-      );
-      
-      final animation = Tween<double>(
-        begin: -100, // Comenzar más arriba
-        end: 1200,   // Terminar más abajo
-      ).animate(CurvedAnimation(
-        parent: controller,
-        curve: Curves.easeInOut,
-      ));
-      
-      _dropControllers.add(controller);
-      _dropAnimations.add(animation);
-      
-      // Posiciones aleatorias para las gotas 
-      _dropPositions.add(Offset(
-        random.nextDouble() * 500, // Ancho más amplio
-        random.nextDouble() * 800, // Alto más amplio
-      ));
-      
-      _dropColors.add(colors[random.nextInt(colors.length)]);
-      
-      // Iniciar animación con delay aleatorio
-      Future.delayed(Duration(milliseconds: random.nextInt(2000)), () {
-        if (_isMounted) {
-          controller.repeat();
-        }
-      });
-    }
-  }
-
+  // Métodos separados para los listeners
   void _handleFocus1Change() {
     if (_isMounted) {
       setState(() {});
@@ -113,129 +47,211 @@ class _LogIN_ScreenState extends State<LogIN_Screen>
   @override
   Widget build(BuildContext context){
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 123, 182, 177),
-      body: Stack(
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+             Color.fromARGB(255, 61, 180, 248), // Azul ESCOM
+             Color.fromARGB(255, 53, 163, 226), // Variación más oscura del azul ESCOM
+             Color.fromARGB(255, 112, 192, 245),
+            ],
+            stops: [0.0, 0.5, 1.0],
+          ),
+        ),
+        child: SafeArea(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(height: 30),
+                // Título de bienvenida
+                welcomeTitle(),
+                SizedBox(height: 20),
+                // GIF o imagen animada
+                animatedImage(),
+                SizedBox(height: 40),
+                // Formulario con diseño moderno
+                formContainer(),
+                SizedBox(height: 20),
+                account(),
+                SizedBox(height: 30),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget welcomeTitle() {
+    return Column(
+      children: [
+        Text(
+          '¡Bienvenido!',
+          style: TextStyle(
+            fontSize: 32,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF98272B), // Color guinda 
+            letterSpacing: 1.2,
+          ),
+        ),
+        SizedBox(height: 8),
+        Text(
+          'Inicia sesión para continuar',
+          style: TextStyle(
+            fontSize: 16,
+            color: Color(0xFF98272B), // Color guinda 
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget formContainer() {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 20),
+      padding: EdgeInsets.all(30),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(25),
+        boxShadow: [
+          BoxShadow(
+            color: Color(0xFF2D6A4F).withOpacity(0.1),
+            blurRadius: 20,
+            offset: Offset(0, 10),
+          ),
+        ],
+      ),
+      child: Column(
         children: [
-          // Fondo con animación de gotas
-          AnimatedBackground(),
+          textfield(email, _focusNode1, 'Correo electrónico', Icons.email_outlined),
+          SizedBox(height: 20),
+          textfield(password, _focusNode2, 'Contraseña', Icons.lock_outline, isPassword: true),
+          SizedBox(height: 15),
           
-          // Contenido principal
-          SafeArea(
-            child: SingleChildScrollView(
-              child: Column(
+          // Mostrar mensaje de error si existe
+          if (errorMessage != null)
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(15),
+              margin: EdgeInsets.only(bottom: 15),
+              decoration: BoxDecoration(
+                color: Colors.red.shade50,
+                borderRadius: BorderRadius.circular(15),
+                border: Border.all(color: Colors.red.shade200),
+              ),
+              child: Row(
                 children: [
-                  SizedBox(height: 20),
-                  image(),
-                  SizedBox(height: 50),
-                  textfield(email, _focusNode1, 'Correo', Icons.email),
-                  SizedBox(height: 10),
-                  textfield(password, _focusNode2, 'Contraseña', Icons.password, isPassword: true),
-                  SizedBox(height: 8),
-                  
-                  // Mostrar mensaje de error si existe
-                  if (errorMessage != null)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: Container(
-                        width: double.infinity,
-                        padding: EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: Colors.red.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Text(
-                          errorMessage!,
-                          style: TextStyle(color: Colors.white),
-                          textAlign: TextAlign.center,
-                        ),
+                  Icon(Icons.error_outline, color: Colors.red.shade600, size: 20),
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      errorMessage!,
+                      style: TextStyle(
+                        color: Colors.red.shade700,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
-                    
-                  SizedBox(height: 8),
-                  account(),
-                  SizedBox(height: 20),
-                  Login_bottom(),
+                  ),
                 ],
               ),
             ),
-          ),
+            
+          Login_bottom(),
         ],
       ),
     );
   }
 
-  // Widget para el fondo animado
-  Widget AnimatedBackground() {
-    return Positioned.fill(
-      child: CustomPaint(
-        painter: DropsPainter(
-          animations: _dropAnimations,
-          positions: _dropPositions,
-          colors: _dropColors,
+  Widget account() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          "¿No tienes una cuenta? ",
+          style: TextStyle(
+            color: Color(0xFF52796F),
+            fontSize: 15,
+            fontWeight: FontWeight.w400,
+          ),
         ),
-      ),
+        GestureDetector(
+          onTap: widget.show,
+          child: Text(
+            'Registrarse',
+            style: TextStyle(
+              color: Color(0xFF2D6A4F),
+              fontSize: 15,
+              fontWeight: FontWeight.bold,
+              decoration: TextDecoration.underline,
+            ),
+          ),
+        )
+      ],
     );
   }
 
-  Widget account() {
-    return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Text(
-                "¿No tienes una cuenta?",
-                style: TextStyle(color: Colors.white, fontSize: 14),
-                ),
-                SizedBox(width: 5),
-                GestureDetector(
-                  onTap: widget.show,
-                  child: Text(
-                    'Registrarse',
-                    style: TextStyle(color: custom_green, fontSize: 14, fontWeight: FontWeight.bold),
-                    ),
-                )
-            ],
-          ),
-        );
-  }
-
   Widget Login_bottom() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15),
-      child: GestureDetector(
-        onTap: isLoading ? null : _handleLogin,
-        child: Container(
-          alignment: Alignment.center,
-          width: double.infinity,
-          height: 50,
-          decoration: BoxDecoration(
-            color: isLoading ? Colors.grey : Colors.blueAccent,
-            borderRadius: BorderRadius.circular(10),
+    return GestureDetector(
+      onTap: isLoading ? null : _handleLogin,
+      child: Container(
+        alignment: Alignment.center,
+        width: double.infinity,
+        height: 55,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: isLoading 
+              ? [Colors.grey.shade400, Colors.grey.shade500]
+              : [Color(0xFF2D6A4F), Color(0xFF40916C)],
           ),
-          child: isLoading 
-            ? CircularProgressIndicator(color: Colors.white)
-            : Text(
-                'Iniciar Sesión',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 23,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+          borderRadius: BorderRadius.circular(15),
+          boxShadow: [
+            BoxShadow(
+              color: (isLoading ? Colors.grey : Color(0xFF2D6A4F)).withOpacity(0.3),
+              blurRadius: 8,
+              offset: Offset(0, 4),
+            ),
+          ],
         ),
+        child: isLoading 
+          ? SizedBox(
+              width: 24,
+              height: 24,
+              child: CircularProgressIndicator(
+                color: Colors.white,
+                strokeWidth: 2.5,
+              ),
+            )
+          : Text(
+              'Iniciar Sesión',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 0.5,
+              ),
+            ),
       ),
     );
   }
   
+  // Método para manejar el login
   Future<void> _handleLogin() async {
+    // Verificar si el widget sigue montado antes de continuar
     if (!_isMounted) return;
     
+    // Limpiar mensajes de error previos
     setState(() {
       errorMessage = null;
       isLoading = true;
     });
 
+    // Validar campos
     if (email.text.trim().isEmpty || password.text.isEmpty) {
       if (_isMounted) {
         setState(() {
@@ -249,7 +265,10 @@ class _LogIN_ScreenState extends State<LogIN_Screen>
     try {
       await AuthenticationRemote().login(email.text.trim(), password.text.trim());
       
+      // Verificar si el widget sigue montado antes de navegar
       if (_isMounted) {
+        // Si llegamos aquí, el login fue exitoso
+        // Navegar a la pantalla de niveles
         Navigator.pushReplacement(
           context, 
           MaterialPageRoute(builder: (context) => Niveles())
@@ -257,6 +276,7 @@ class _LogIN_ScreenState extends State<LogIN_Screen>
       }
       
     } catch (e) {
+      // Verificar si el widget sigue montado antes de actualizar el estado
       if (_isMounted) {
         setState(() {
           errorMessage = "Error al iniciar sesión: ${e.toString()}";
@@ -274,182 +294,103 @@ class _LogIN_ScreenState extends State<LogIN_Screen>
       IconData iconss, 
       {bool isPassword = false}
   ) {
-    return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: TextField(
-              controller: controller,
-              focusNode: focusNode,
-              obscureText: isPassword,
-              style: TextStyle(fontSize: 18, color: Colors.black),
-              decoration: InputDecoration(
-                prefixIcon: Icon(
-                  iconss,
-                  color: focusNode.hasFocus
-                   ? custom_green
-                   : Color(0xffc5c5c5),
-                ),
-                contentPadding: 
-                 EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-                 hintText: typeName,
-                 enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(
-                    color: Color(0xffc5c5c5),
-                    width: 2.0,
-                    ),
-                 ),
-                 focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(
-                    color: custom_green,
-                    width: 2.0,
-                    ),
-                 ),
-              ),
-            ),
+    return Container(
+      decoration: BoxDecoration(
+        color: Color(0xFFF8FFFE),
+        borderRadius: BorderRadius.circular(15),
+        border: Border.all(
+          color: focusNode.hasFocus 
+            ? Color(0xFF2D6A4F)
+            : Color(0xFFE6F2EF),
+          width: 2.0,
+        ),
+      ),
+      child: TextField(
+        controller: controller,
+        focusNode: focusNode,
+        obscureText: isPassword,
+        style: TextStyle(
+          fontSize: 16, 
+          color: Color(0xFF2D6A4F),
+          fontWeight: FontWeight.w500,
+        ),
+        decoration: InputDecoration(
+          prefixIcon: Icon(
+            iconss,
+            color: focusNode.hasFocus
+             ? Color(0xFF2D6A4F)
+             : Color(0xFF74A189),
+            size: 22,
           ),
-        );
+          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+          hintText: typeName,
+          hintStyle: TextStyle(
+            color: Color(0xFF74A189),
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+          ),
+          border: InputBorder.none,
+        ),
+      ),
+    );
   }
 
-  Widget image() {
-  return LayoutBuilder(
-    builder: (context, constraints) {
-      // Tamaño responsivo en el ancho de la pantalla
-      double containerWidth = constraints.maxWidth;
-      double containerHeight = containerWidth * 0.75; // Relación de aspecto 4:3
-
-      return Container(
-        width: containerWidth,
-        height: containerHeight,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 10,
-              spreadRadius: 1,
-            ),
-          ],
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(15),
-          child: Gif(
-            image: AssetImage('gifs/Scene_Quiz.gif'),
-            autostart: Autostart.loop,
-            fit: BoxFit.contain, // Para mantener la proporción
-            placeholder: (context) => Center(
-              child: CircularProgressIndicator(),
-            ),
+  Widget animatedImage() {
+    return Container(
+      width: 200,
+      height: 200,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(100),
+        boxShadow: [
+          BoxShadow(
+            color: Color(0xFF2D6A4F).withOpacity(0.1),
+            blurRadius: 20,
+            offset: Offset(0, 10),
           ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(100),
+        child: Image.asset(
+          'gifs/Scene_Quiz.gif', 
+          fit: BoxFit.cover,
+          // 'images/1.jpg',
+          
+          errorBuilder: (context, error, stackTrace) {
+            return Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Color(0xFF2D6A4F), Color(0xFF40916C)],
+                ),
+              ),
+              child: Icon(
+                Icons.quiz,
+                size: 80,
+                color: Colors.white,
+              ),
+            );
+          },
         ),
-      );
-    },
-  );
-}
+      ),
+    );
+  }
 
   @override
   void dispose() {
+    // Marcar que el widget ya no está montado
     _isMounted = false;
     
+    // Eliminar los listeners antes de llamar a dispose
     _focusNode1.removeListener(_handleFocus1Change);
     _focusNode2.removeListener(_handleFocus2Change);
     
+    // Disponer los controladores y nodos de foco
     email.dispose();
     password.dispose();
     _focusNode1.dispose();
     _focusNode2.dispose();
     
-    // Disponer animaciones
-    _animationController.dispose();
-    for (var controller in _dropControllers) {
-      controller.dispose();
-    }
-    
     super.dispose();
   }
-}
-
-// Para dibujar las gotas animadas
-class DropsPainter extends CustomPainter {
-  final List<Animation<double>> animations;
-  final List<Offset> positions;
-  final List<Color> colors;
-
-  DropsPainter({
-    required this.animations,
-    required this.positions,
-    required this.colors,
-  }) : super(repaint: Listenable.merge(animations));
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    for (int i = 0; i < animations.length; i++) {
-      final paint = Paint()
-        ..color = colors[i].withOpacity(0.4) 
-        ..style = PaintingStyle.fill;
-
-      // Crear forma de gota 
-      final center = Offset(
-        (positions[i].dx * size.width / 500).clamp(0.0, size.width), // Adaptar al ancho real
-        animations[i].value % (size.height + 200), // Usar altura real + margen
-      );
-      
-      final dropSize = 6.0 + (i % 4) * 3.0; // Tamaños más variados
-      
-      // Cuerpo principal de la gota 
-      canvas.drawCircle(center, dropSize, paint);
-      
-      // Cola de la gota
-      final tailPath = Path();
-      tailPath.moveTo(center.dx, center.dy - dropSize);
-      tailPath.quadraticBezierTo(
-        center.dx - dropSize * 0.4,
-        center.dy - dropSize * 2.0,
-        center.dx,
-        center.dy - dropSize * 2.5,
-      );
-      tailPath.quadraticBezierTo(
-        center.dx + dropSize * 0.4,
-        center.dy - dropSize * 2.0,
-        center.dx,
-        center.dy - dropSize,
-      );
-      
-      canvas.drawPath(tailPath, paint);
-      
-      final highlightPaint = Paint()
-        ..color = Colors.white.withOpacity(0.3) // Más brillo
-        ..style = PaintingStyle.fill;
-      
-      canvas.drawCircle(
-        Offset(center.dx - dropSize * 0.3, center.dy - dropSize * 0.3),
-        dropSize * 0.25,
-        highlightPaint,
-      );
-      
-      // Gotas más pequeñas 
-      if (i % 3 == 0) {
-        final splashPaint = Paint()
-          ..color = colors[i].withOpacity(0.2)
-          ..style = PaintingStyle.fill;
-          
-        // Pequeñas gotas alrededor
-        for (int j = 0; j < 3; j++) {
-          final splashOffset = Offset(
-            center.dx + (j - 1) * dropSize * 1.5,
-            center.dy + dropSize * 0.8,
-          );
-          canvas.drawCircle(splashOffset, dropSize * 0.3, splashPaint);
-        }
-      }
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }
