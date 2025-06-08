@@ -60,12 +60,13 @@ class HomeScreenState extends State<HomeScreen> {
               showDialog(
                 context: context,
                 barrierDismissible: false,
-                builder: (ctx) => ResultBox(
-                  result: score,
-                  questionLeght: questions.length,
-                  onPressed: startOver,
-                  completionTime: timerText,
-                ),
+                builder:
+                    (ctx) => ResultBox(
+                      result: score,
+                      questionLeght: questions.length,
+                      onPressed: startOver,
+                      completionTime: timerText,
+                    ),
               );
             }
           });
