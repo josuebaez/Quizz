@@ -52,7 +52,7 @@ class HomeScreenState extends State<HomeScreen> {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         _seconds++;
-        if (_seconds >= 60) {
+        if (_seconds >= 180) {
           _timer.cancel();
           _questions.then((questions) {
             if (mounted) {
@@ -574,6 +574,15 @@ class _OrderWidgetState extends State<OrderWidget> {
   void initState() {
     super.initState();
     userOrder = List<String>.from(widget.options);
+  }
+
+  @override
+  void didUpdateWidget(OrderWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Actualizar userOrder cuando las opciones cambien
+    if (widget.options != oldWidget.options) {
+      userOrder = List<String>.from(widget.options);
+    }
   }
 
   @override

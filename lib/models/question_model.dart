@@ -59,16 +59,14 @@ class Question {
     } else if (type == 'order') {
       var originalOptions = List<String>.from(json['options']);
       var originalAnswer = List<String>.from(json['answer']);
-      
-      var shuffledOptions = List<String>.from(originalOptions);
-      shuffledOptions.shuffle(Random());
-      
+      // Siempre mezclar las opciones al crear la pregunta
+      originalOptions.shuffle(Random());
       return Question(
         id: json['id'],
         title: json['title'],
         tema: tema,
-        orderOptions: shuffledOptions, // Lista mezclada independiente
-        correctOrder: originalAnswer,   // Lista correcta independiente
+        orderOptions: originalOptions, // Lista mezclada
+        correctOrder: originalAnswer,   // Lista correcta
         type: type,
       );
     } else {
