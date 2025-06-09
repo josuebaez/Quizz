@@ -66,7 +66,7 @@ class Question {
         title: json['title'],
         tema: tema,
         orderOptions: originalOptions, // Lista mezclada
-        correctOrder: originalAnswer,   // Lista correcta
+        correctOrder: originalAnswer, // Lista correcta
         type: type,
       );
     } else {
@@ -85,10 +85,12 @@ class Question {
   // Cambio de formato, soluciones se generan de forma random
   factory Question.fromApiJson(Map<String, dynamic> json) {
     String questionText = _decodeHtmlEntities(json['question']);
-    
+
     List<String> allOptions = [
-      ...json['incorrect_answers'].map((e) => _decodeHtmlEntities(e.toString())),
-      _decodeHtmlEntities(json['correct_answer'])
+      ...json['incorrect_answers'].map(
+        (e) => _decodeHtmlEntities(e.toString()),
+      ),
+      _decodeHtmlEntities(json['correct_answer']),
     ];
 
     // Mezclar las opciones aleatoriamente
@@ -98,7 +100,8 @@ class Question {
     Map<String, bool> optionsMap = {};
     for (String option in allOptions) {
       // Comparamos cada opción con la respuesta correcta
-      optionsMap[option] = (option == _decodeHtmlEntities(json['correct_answer']));
+      optionsMap[option] =
+          (option == _decodeHtmlEntities(json['correct_answer']));
     }
 
     return Question(
