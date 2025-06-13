@@ -34,7 +34,9 @@ class LocalQuestionLoader {
         .replaceAll(RegExp(r'[íìïî]'), 'i')
         .replaceAll(RegExp(r'[óòöô]'), 'o')
         .replaceAll(RegExp(r'[úùüû]'), 'u')
-        .replaceAll(RegExp(r'[^a-z0-9 ]'), '');
+        .replaceAll(RegExp(r'[ñ]'), 'n')
+        .replaceAll(RegExp(r'[^a-z0-9 ]'), '')
+        .trim();
   }
 
   Future<List<Question>> loadQuestionsByTypeAndTema(

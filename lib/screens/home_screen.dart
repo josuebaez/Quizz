@@ -23,6 +23,12 @@ class HomeScreen extends StatefulWidget {
   HomeScreenState createState() => HomeScreenState();
 }
 
+
+//Clase nueva para poder limpiar respuesta
+class ClearFieldsNotification extends Notification {
+  const ClearFieldsNotification();
+}
+
 class HomeScreenState extends State<HomeScreen> {
   final ApiService apiService = ApiService();
   final LocalQuestionLoader localLoader = LocalQuestionLoader();
@@ -143,6 +149,7 @@ class HomeScreenState extends State<HomeScreen> {
           index++;
           isPressed = false;
           isAlreadySelected = false;
+          _clearAllFields();
         });
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -155,6 +162,11 @@ class HomeScreenState extends State<HomeScreen> {
       }
     }
   }
+
+  void _clearAllFields() {
+  // Enviar la notificación para limpiar los campos
+  const ClearFieldsNotification().dispatch(context);
+}
 
   void checkAnswerAndUpdate(bool value) {
     if (isAlreadySelected) {
@@ -506,48 +518,78 @@ class ShortAnswerWidget extends StatefulWidget {
   State<ShortAnswerWidget> createState() => _ShortAnswerWidgetState();
 }
 
+
+//Modificado para que se limpie el campo de respuesta al cambiar de pregunta
 class _ShortAnswerWidgetState extends State<ShortAnswerWidget> {
   final TextEditingController controller = TextEditingController();
+  bool hasInitialized = false;
+  
+  @override
+  void initState() {
+    super.initState();
+    hasInitialized = true;
+  }
+
+  @override
+  void didUpdateWidget(ShortAnswerWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Solo limpiar cuando cambia de pregunta
+    if (oldWidget.isPressed && !widget.isPressed) {
+      controller.clear();
+    }
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        TextField(
-          controller: controller,
-          enabled: !widget.isPressed,
-          decoration: InputDecoration(
-            labelText: 'Respuesta',
-            border: OutlineInputBorder(),
-            fillColor: Colors.white,
-            filled: true,
+    return NotificationListener<ClearFieldsNotification>(
+      onNotification: (notification) {
+        controller.clear();
+        return true;
+      },
+      child: Column(
+        children: [
+          TextField(
+            controller: controller,
+            enabled: !widget.isPressed,
+            decoration: InputDecoration(
+              labelText: 'Respuesta',
+              border: OutlineInputBorder(),
+              fillColor: Colors.white,
+              filled: true,
+            ),
+            style: TextStyle(color: Colors.black),
           ),
-          style: TextStyle(color: Colors.black),
-        ),
-        const SizedBox(height: 10),
-        ElevatedButton(
-          onPressed:
-              widget.isPressed
-                  ? null
-                  : () => widget.onValidate(controller.text),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.white,
-            foregroundColor: Color(0xFFAA4465),
+          const SizedBox(height: 10),
+          ElevatedButton(
+            onPressed: widget.isPressed 
+                ? null 
+                : () => widget.onValidate(controller.text),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.white,
+              foregroundColor: Color(0xFFAA4465),
+            ),
+            child: Text('Validar'),
           ),
-          child: Text('Validar'),
-        ),
-        if (widget.isPressed)
-          Padding(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: Container(
-              padding: EdgeInsets.all(4),
-              color: Colors.white,
-              child: Text(
-                'Respuesta correcta: ${widget.correctAnswer}',
-                style: TextStyle(color: correct),
+          if (widget.isPressed)
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Container(
+                padding: EdgeInsets.all(4),
+                color: Colors.white,
+                child: Text(
+                  'Respuesta correcta: ${widget.correctAnswer}',
+                  style: TextStyle(color: correct),
+                ),
               ),
             ),
-          ),
-      ],
+        ],
+      ),
     );
   }
 }

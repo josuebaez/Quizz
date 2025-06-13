@@ -123,4 +123,18 @@ class Question {
         .replaceAll('&ldquo;', '"')
         .replaceAll('&rdquo;', '"');
   }
+
+  String normalizedTitle(String text) {
+    return text
+        .toLowerCase()
+        .replaceAll(RegExp(r'[áàäâ]'), 'a')
+        .replaceAll(RegExp(r'[éèëê]'), 'e')
+        .replaceAll(RegExp(r'[íìïî]'), 'i')
+        .replaceAll(RegExp(r'[óòöô]'), 'o')
+        .replaceAll(RegExp(r'[úùüû]'), 'u')
+        .replaceAll(RegExp(r'[ñ]'), 'n')
+        .replaceAll(RegExp(r'[^a-z0-9 ]'), '')
+        .trim();
+  }
+
 }
