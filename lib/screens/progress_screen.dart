@@ -36,38 +36,41 @@ class _ProgressScreenState extends State<ProgressScreen> {
     // Debug prints to inspect progress data
     print('Building chart for theme: $theme');
     print('All progress keys: ${progress.keys.toList()}');
-    // Filter progress entries by theme, case-insensitive
-    final filteredProgress = Map.fromEntries(
-      // Debug: log entries before filtering
-      progress.entries
-          .map((e) => e)
-          .toList()
-          .where((entry) {
-            final parts = entry.key.split('__');
-            return parts.length == 2 &&
-                parts[1].toLowerCase() == theme.toLowerCase();
-          })
-          .map((entry) {
-            final parts = entry.key.split('__');
-            return MapEntry(parts[0], entry.value as int);
-          }),
-    );
-    print('Filtered progress: $filteredProgress');
-
+    // Prepare best and previous scores by theme
+    Map<String, int> bestProgress = {};
+    Map<String, int> prevProgress = {};
+    progress.forEach((key, value) {
+      final parts = key.split('__');
+      if (parts.length == 2 && parts[1].toLowerCase() == theme.toLowerCase()) {
+        bestProgress[parts[0]] = value as int;
+      } else if (parts.length == 3 &&
+          parts[1].toLowerCase() == theme.toLowerCase() &&
+          parts[2] == 'prev') {
+        prevProgress[parts[0]] = value as int;
+      }
+    });
+    // Determine all labels
+    List<String> tipos =
+        {...bestProgress.keys, ...prevProgress.keys}.toList()..sort();
+    // Build bar groups with two rods: previous (gray) and best (blue)
     List<BarChartGroupData> barGroups = [];
     List<String> xLabels = [];
-    int index = 0;
-    filteredProgress.forEach((tipo, score) {
+    for (int i = 0; i < tipos.length; i++) {
+      String tipo = tipos[i];
+      double prevY = prevProgress[tipo]?.toDouble() ?? 0;
+      double bestY = bestProgress[tipo]?.toDouble() ?? 0;
       barGroups.add(
         BarChartGroupData(
-          x: index,
-          barRods: [BarChartRodData(toY: score.toDouble(), color: Colors.blue)],
-          showingTooltipIndicators: [0],
+          x: i,
+          barRods: [
+            BarChartRodData(toY: prevY, color: Colors.grey),
+            BarChartRodData(toY: bestY, color: Colors.blue),
+          ],
+          showingTooltipIndicators: [0, 1],
         ),
       );
       xLabels.add(tipo);
-      index++;
-    });
+    }
 
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -78,6 +81,20 @@ class _ProgressScreenState extends State<ProgressScreen> {
             theme.toUpperCase(),
             style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
+          const SizedBox(height: 8),
+          // Legend for previous and best
+          Row(
+            children: [
+              Icon(Icons.circle, size: 10, color: Colors.grey),
+              const SizedBox(width: 4),
+              const Text('Último'),
+              const SizedBox(width: 16),
+              Icon(Icons.circle, size: 10, color: Colors.blue),
+              const SizedBox(width: 4),
+              const Text('Mejor'),
+            ],
+          ),
+          const SizedBox(height: 20),
           const SizedBox(height: 28),
           SizedBox(
             height: 300, // Altura fija para evitar conflictos de tamaño

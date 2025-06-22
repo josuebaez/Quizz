@@ -23,7 +23,6 @@ class HomeScreen extends StatefulWidget {
   HomeScreenState createState() => HomeScreenState();
 }
 
-
 //Clase nueva para poder limpiar respuesta
 class ClearFieldsNotification extends Notification {
   const ClearFieldsNotification();
@@ -164,9 +163,9 @@ class HomeScreenState extends State<HomeScreen> {
   }
 
   void _clearAllFields() {
-  // Enviar la notificación para limpiar los campos
-  const ClearFieldsNotification().dispatch(context);
-}
+    // Enviar la notificación para limpiar los campos
+    const ClearFieldsNotification().dispatch(context);
+  }
 
   void checkAnswerAndUpdate(bool value) {
     if (isAlreadySelected) {
@@ -220,10 +219,15 @@ class HomeScreenState extends State<HomeScreen> {
       tipo = widget.difficulty;
       tema = 'general';
     }
-    String key = '${tipo}__${tema}';
-    int prevScore = prefs.getInt(key) ?? 0;
-    if (score > prevScore) {
-      await prefs.setInt(key, score);
+    // Define base and previous keys
+    String baseKey = '${tipo}__${tema}';
+    String prevKey = '${baseKey}__prev';
+    // Always save the latest score under prevKey
+    await prefs.setInt(prevKey, score);
+    // Update best score if current is higher
+    int bestScore = prefs.getInt(baseKey) ?? 0;
+    if (score > bestScore) {
+      await prefs.setInt(baseKey, score);
     }
   }
 
@@ -518,12 +522,11 @@ class ShortAnswerWidget extends StatefulWidget {
   State<ShortAnswerWidget> createState() => _ShortAnswerWidgetState();
 }
 
-
 //Modificado para que se limpie el campo de respuesta al cambiar de pregunta
 class _ShortAnswerWidgetState extends State<ShortAnswerWidget> {
   final TextEditingController controller = TextEditingController();
   bool hasInitialized = false;
-  
+
   @override
   void initState() {
     super.initState();
@@ -567,9 +570,10 @@ class _ShortAnswerWidgetState extends State<ShortAnswerWidget> {
           ),
           const SizedBox(height: 10),
           ElevatedButton(
-            onPressed: widget.isPressed 
-                ? null 
-                : () => widget.onValidate(controller.text),
+            onPressed:
+                widget.isPressed
+                    ? null
+                    : () => widget.onValidate(controller.text),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.white,
               foregroundColor: Color(0xFFAA4465),
