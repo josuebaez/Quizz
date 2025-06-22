@@ -67,7 +67,7 @@
         "type": "short",
         "tema": "Historia",
         "title": "¿Quién lideró la conquista de México en 1521?",
-        "answer": "Hernán Cortés"
+        "answer": "Hernán Cortes"
     },
     {
         "id": "11",
@@ -81,7 +81,7 @@
         "type": "short",
         "tema": "Matemáticas",
         "title": "¿Qué nombre recibe un polígono de seis lados?",
-        "answer": "Hexágono"
+        "answer": "Hexagono"
     },
     {
         "id": "13",
@@ -123,7 +123,7 @@
         "type": "short",
         "tema": "Matemáticas",
         "title": "¿Qué operación inversa corresponde a la multiplicación?",
-        "answer": "División"
+        "answer": "Division"
     },
     {
         "id": "19",
@@ -165,7 +165,7 @@
         "type": "short",
         "tema": "Astronomía",
         "title": "¿Cómo se llama nuestra galaxia?",
-        "answer": "Vía Láctea"
+        "answer": "Vía Lactea"
     },
     {
         "id": "25",
@@ -186,7 +186,7 @@
         "type": "short",
         "tema": "Astronomía",
         "title": "¿Cuál es el planeta más grande del sistema solar?",
-        "answer": "Júpiter"
+        "answer": "Jupiter"
     },
     {
         "id": "28",
@@ -200,7 +200,7 @@
         "type": "short",
         "tema": "Astronomía",
         "title": "¿Qué planeta fue considerado el noveno hasta 2006?",
-        "answer": "Plutón"
+        "answer": "Pluton"
     },
     {
         "id": "30",
@@ -214,7 +214,7 @@
         "type": "short",
         "tema": "Cultura General",
         "title": "¿Cuál es el idioma oficial de Brasil?",
-        "answer": "Portugués"
+        "answer": "Portugues"
     },
     {
         "id": "32",
@@ -235,7 +235,7 @@
         "type": "short",
         "tema": "Cultura General",
         "title": "¿Cómo se llama el océano más grande del mundo?",
-        "answer": "Pacífico"
+        "answer": "Pacifico"
     },
     {
         "id": "35",
@@ -270,13 +270,13 @@
         "type": "short",
         "tema": "Cultura General",
         "title": "¿En qué continente se encuentra Egipto?",
-        "answer": "África"
+        "answer": "Africa"
     },
     {
         "id": "40",
         "type": "short",
         "tema": "Cultura General",
         "title": "¿Qué animal es conocido como el rey de la selva?",
-        "answer": "León"
+        "answer": "Leon"
     }
 ]
